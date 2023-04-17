@@ -1,2 +1,0 @@
-# shelterBuddyBot
-Telegram Bot
