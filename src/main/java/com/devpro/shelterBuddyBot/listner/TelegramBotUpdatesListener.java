@@ -163,7 +163,3 @@ public class TelegramBotUpdatesListener {
         }
     }
 }
-
-
-
-
