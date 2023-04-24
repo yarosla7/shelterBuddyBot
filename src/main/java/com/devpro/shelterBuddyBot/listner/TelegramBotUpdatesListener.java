@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-
 @Component
 public class TelegramBotUpdatesListener {
 
@@ -82,54 +81,45 @@ public class TelegramBotUpdatesListener {
                     Привет я расскажу тебе о приютах нашего города и помогу тебе найти  или пристроить потеряшку!
 
                     Какой вы ищите приют?""").replyMarkup(inlineKeyboard);
-        }else {
+        } else {
             return new SendMessage(chatId, """
                     Бот не знает такой команды введинте /start для начала работы с ботом""");
         }
 
     }
+
     private SendMessage handleCallback(CallbackQuery callbackQuery) {
         Message message = callbackQuery.message();
         long chatId = message.chat().id();
         String data = callbackQuery.data();
-
         ObjectMapper objectMapper = new ObjectMapper();
         CallbackRequest callbackRequest = null;
-        try {
-            //десериализуем данные из события бота в объект
+        try { //десериализуем данные из события бота в объект
             callbackRequest = objectMapper.readValue(data, CallbackRequest.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
         if (Objects.isNull(callbackRequest)) {
             return new SendMessage(chatId, "Вызываю волонтера!");
         }
-
-        InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
-
-        //пробегаем по всем возможным событиям и что то делаем
+        InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(); //пробегаем по всем возможным событиям и что то делаем
         switch (callbackRequest) {
             case DOGS:
             case CATS:
                 ShelterType shelterType = ShelterType.getByName(data);
                 shelterModeService.setShelter(chatId, shelterType);
-
                 //добавляем кнопки
                 addButton(inlineKeyboard, CallbackRequest.SHELTER_INFO.getName(), CallbackRequest.SHELTER_INFO);
                 addButton(inlineKeyboard, CallbackRequest.GET_ANIMAL.getName(), CallbackRequest.GET_ANIMAL);
                 addButton(inlineKeyboard, CallbackRequest.REPORT_ANIMAL.getName(), CallbackRequest.SHELTER_INFO);
                 addButton(inlineKeyboard, CallbackRequest.HELP.getName(), CallbackRequest.HELP);
-
                 return new SendMessage(chatId, "Отличный выбор! Чем я могу тебе помочь?").replyMarkup(inlineKeyboard);
             case SHELTER_INFO:
-
                 addButton(inlineKeyboard, CallbackRequest.SHELTER_CONTACTS.getName(), CallbackRequest.SHELTER_CONTACTS);
                 addButton(inlineKeyboard, CallbackRequest.PHONE_SECURITY.getName(), CallbackRequest.PHONE_SECURITY);
                 addButton(inlineKeyboard, CallbackRequest.SAFETY_PRECAUTIONS.getName(), CallbackRequest.SAFETY_PRECAUTIONS);
                 addButton(inlineKeyboard, CallbackRequest.PUT_MY_PHONE.getName(), CallbackRequest.PUT_MY_PHONE);
                 addButton(inlineKeyboard, CallbackRequest.HELP.getName(), CallbackRequest.HELP);
-
                 return new SendMessage(chatId, "Что именно тебя интересует?").replyMarkup(inlineKeyboard);
             case GET_SHELTER_INFO:
                 return new SendMessage(chatId, "Рассказываю тебе о приюте!");
@@ -146,7 +136,6 @@ public class TelegramBotUpdatesListener {
                 return new SendMessage(chatId, "Рассказываю тебе как взять животное!");
             case REPORT_ANIMAL:
                 return new SendMessage(chatId, "Прислаю отчет о питомце!");
-            case HELP:
             default:
                 return new SendMessage(chatId, "Вызываю волонтера!");
         }
@@ -156,8 +145,7 @@ public class TelegramBotUpdatesListener {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             //добавляем кнопку в новую строку addRow и сериализуем объект в json
-            inlineKeyboard.addRow(new InlineKeyboardButton(buttonName).callbackData(objectMapper
-                    .writeValueAsString(callbackData)));
+            inlineKeyboard.addRow(new InlineKeyboardButton(buttonName).callbackData(objectMapper.writeValueAsString(callbackData)));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
