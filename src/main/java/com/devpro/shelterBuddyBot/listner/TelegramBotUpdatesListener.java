@@ -1,5 +1,7 @@
 package com.devpro.shelterBuddyBot.listner;
 
+import com.devpro.shelterBuddyBot.dao.ShelterDao;
+import com.devpro.shelterBuddyBot.model.Shelter;
 import com.devpro.shelterBuddyBot.service.ShelterModeService;
 import com.devpro.shelterBuddyBot.util.CallbackRequest;
 import com.devpro.shelterBuddyBot.util.ShelterType;
@@ -13,27 +15,34 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Optional;
 
 
 @Component
+@RequiredArgsConstructor
+//@Service
 public class TelegramBotUpdatesListener {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final TelegramBot telegramBot;
     private final ShelterModeService shelterModeService = ShelterModeService.getInstance();
 
+    private final ShelterDao shelterDao;
 
-    public TelegramBotUpdatesListener(TelegramBot telegramBot) {
-        this.telegramBot = telegramBot;
-    }
+
+//    public TelegramBotUpdatesListener(TelegramBot telegramBot) {
+//        this.telegramBot = telegramBot;
+//    }
 
     @PostConstruct
     public void init() {
+
         telegramBot.setUpdatesListener(updates -> {
             updates.forEach(this::process);
 
@@ -43,6 +52,7 @@ public class TelegramBotUpdatesListener {
 
     //обрабатываем каждое событие в боте
     public void process(Update update) {
+
 
         SendMessage request = null;
 
@@ -82,12 +92,13 @@ public class TelegramBotUpdatesListener {
                     Привет я расскажу тебе о приютах нашего города и помогу тебе найти  или пристроить потеряшку!
 
                     Какой вы ищите приют?""").replyMarkup(inlineKeyboard);
-        }else {
+        } else {
             return new SendMessage(chatId, """
                     Бот не знает такой команды введинте /start для начала работы с ботом""");
         }
 
     }
+
     private SendMessage handleCallback(CallbackQuery callbackQuery) {
         Message message = callbackQuery.message();
         long chatId = message.chat().id();
@@ -134,7 +145,22 @@ public class TelegramBotUpdatesListener {
             case GET_SHELTER_INFO:
                 return new SendMessage(chatId, "Рассказываю тебе о приюте!");
             case PHONE_SECURITY:
-                return new SendMessage(chatId, "Даю тебе номер телефона охраны!");
+                ShelterType shelter = shelterModeService.getShelter(chatId);
+                Optional<Shelter> byId;
+
+
+
+                if (shelter == ShelterType.CATS) {
+                    byId = shelterDao.findById(2);
+                } else {
+                    byId = shelterDao.findById(1);
+                }
+
+                if (byId.isPresent()) {
+
+                    return new SendMessage(chatId, "Даю тебе номер телефона охраны! " + byId.get().getSecurityPhone());
+                }
+                return new SendMessage(chatId, "Нету!");
             case SAFETY_PRECAUTIONS:
                 return new SendMessage(chatId, "Рассказываю тебе о технике безопасности!");
             case SHELTER_CONTACTS:
