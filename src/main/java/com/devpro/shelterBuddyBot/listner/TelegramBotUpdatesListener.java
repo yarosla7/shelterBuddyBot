@@ -1,7 +1,9 @@
 package com.devpro.shelterBuddyBot.listner;
 
+import com.devpro.shelterBuddyBot.dao.ShelterClientsDao;
 import com.devpro.shelterBuddyBot.dao.ShelterDao;
-import com.devpro.shelterBuddyBot.model.Shelter;
+import com.devpro.shelterBuddyBot.model.ShelterBuddy;
+import com.devpro.shelterBuddyBot.model.ShelterClients;
 import com.devpro.shelterBuddyBot.service.ShelterModeService;
 import com.devpro.shelterBuddyBot.util.CallbackRequest;
 import com.devpro.shelterBuddyBot.util.ShelterType;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 import java.util.Optional;
 
+
 @Component
 @RequiredArgsConstructor
 //@Service
@@ -33,6 +36,7 @@ public class TelegramBotUpdatesListener {
     private final ShelterModeService shelterModeService = ShelterModeService.getInstance();
 
     private final ShelterDao shelterDao;
+    private final ShelterClientsDao shelterClientsDao;
 
 
 //    public TelegramBotUpdatesListener(TelegramBot telegramBot) {
@@ -77,11 +81,16 @@ public class TelegramBotUpdatesListener {
 
         //обрабатывваем отправку контакта и удаляем кнопки ReplyKeyboardRemove
         if (Objects.nonNull(message.contact())) {
+
+            // Записываем контакт. Сейчас взяли или не взял животное ввел вручную, и вручную ввел shelter_id
+            ShelterClients shelterClients = new ShelterClients(message.contact().firstName() + " " + message.contact().lastName(), message.contact().phoneNumber(), false, shelterDao.findById(1).get());
+            // метод репозитория сохранения
+            shelterClientsDao.save(shelterClients);
             return new SendMessage(chatId, "Спасибо я записал твой номер!").replyMarkup(new ReplyKeyboardRemove());
         }
 
         //обрабатываем старт
-        if (message.text().equals("/start")) {
+        if ("/start".equals(message.text())) {
 
             InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
             addButton(inlineKeyboard, CallbackRequest.CATS.getName(), CallbackRequest.CATS);
@@ -102,56 +111,65 @@ public class TelegramBotUpdatesListener {
         Message message = callbackQuery.message();
         long chatId = message.chat().id();
         String data = callbackQuery.data();
+
         ObjectMapper objectMapper = new ObjectMapper();
         CallbackRequest callbackRequest = null;
-        try { //десериализуем данные из события бота в объект
+        try {
+            //десериализуем данные из события бота в объект
             callbackRequest = objectMapper.readValue(data, CallbackRequest.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+
         if (Objects.isNull(callbackRequest)) {
             return new SendMessage(chatId, "Вызываю волонтера!");
         }
-        InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(); //пробегаем по всем возможным событиям и что то делаем
+
+        InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
+
+        //пробегаем по всем возможным событиям и что то делаем
         switch (callbackRequest) {
             case DOGS:
             case CATS:
                 ShelterType shelterType = ShelterType.getByName(data);
                 shelterModeService.setShelter(chatId, shelterType);
+
                 //добавляем кнопки
                 addButton(inlineKeyboard, CallbackRequest.SHELTER_INFO.getName(), CallbackRequest.SHELTER_INFO);
                 addButton(inlineKeyboard, CallbackRequest.GET_ANIMAL.getName(), CallbackRequest.GET_ANIMAL);
                 addButton(inlineKeyboard, CallbackRequest.REPORT_ANIMAL.getName(), CallbackRequest.SHELTER_INFO);
                 addButton(inlineKeyboard, CallbackRequest.HELP.getName(), CallbackRequest.HELP);
+
                 return new SendMessage(chatId, "Отличный выбор! Чем я могу тебе помочь?").replyMarkup(inlineKeyboard);
             case SHELTER_INFO:
+
+                addButton(inlineKeyboard, CallbackRequest.GET_SHELTER_INFO.getName(), CallbackRequest.GET_SHELTER_INFO);
                 addButton(inlineKeyboard, CallbackRequest.SHELTER_CONTACTS.getName(), CallbackRequest.SHELTER_CONTACTS);
                 addButton(inlineKeyboard, CallbackRequest.PHONE_SECURITY.getName(), CallbackRequest.PHONE_SECURITY);
                 addButton(inlineKeyboard, CallbackRequest.SAFETY_PRECAUTIONS.getName(), CallbackRequest.SAFETY_PRECAUTIONS);
                 addButton(inlineKeyboard, CallbackRequest.PUT_MY_PHONE.getName(), CallbackRequest.PUT_MY_PHONE);
                 addButton(inlineKeyboard, CallbackRequest.HELP.getName(), CallbackRequest.HELP);
+
                 return new SendMessage(chatId, "Что именно тебя интересует?").replyMarkup(inlineKeyboard);
             case GET_SHELTER_INFO:
-                return new SendMessage(chatId, "Рассказываю тебе о приюте!");
+
+                return new SendMessage(chatId, shelterDao.findById(1).get().getShelterInfo());
             case PHONE_SECURITY:
                 ShelterType shelter = shelterModeService.getShelter(chatId);
-                Optional<Shelter> byId;
-
-
+                Optional<ShelterBuddy> byId;
 
                 if (shelter == ShelterType.CATS) {
                     byId = shelterDao.findById(2);
                 } else {
                     byId = shelterDao.findById(1);
                 }
-
                 if (byId.isPresent()) {
 
                     return new SendMessage(chatId, "Даю тебе номер телефона охраны! " + byId.get().getSecurityPhone());
                 }
                 return new SendMessage(chatId, "Нету!");
             case SAFETY_PRECAUTIONS:
-                return new SendMessage(chatId, "Рассказываю тебе о технике безопасности!");
+                return new SendMessage(chatId, shelterDao.findById(1).get().getSafetyRecommendations());
             case SHELTER_CONTACTS:
                 return new SendMessage(chatId, "Даю тебе контакты приюта!");
             case PUT_MY_PHONE:
@@ -161,6 +179,7 @@ public class TelegramBotUpdatesListener {
                 return new SendMessage(chatId, "Рассказываю тебе как взять животное!");
             case REPORT_ANIMAL:
                 return new SendMessage(chatId, "Прислаю отчет о питомце!");
+            case HELP:
             default:
                 return new SendMessage(chatId, "Вызываю волонтера!");
         }
@@ -170,9 +189,14 @@ public class TelegramBotUpdatesListener {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             //добавляем кнопку в новую строку addRow и сериализуем объект в json
-            inlineKeyboard.addRow(new InlineKeyboardButton(buttonName).callbackData(objectMapper.writeValueAsString(callbackData)));
+            inlineKeyboard.addRow(new InlineKeyboardButton(buttonName).callbackData(objectMapper
+                    .writeValueAsString(callbackData)));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
     }
 }
+
+
+
+
