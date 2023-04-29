@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-// Класс для преоброзования enum в объект, мапа служит сейчас заглушкой, позже их надо будет переносить в бд
+//  мапа служит сейчас заглушкой, позже их надо будет переносить в бд
 @Service
 public class HashMapShelterModeServiceImpl implements ShelterModeService {
 
