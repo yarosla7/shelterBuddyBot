@@ -1,40 +1,42 @@
 package com.devpro.shelterBuddyBot.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "shelter_buddy")
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class ShelterBuddy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer shelterId;
 
-    //    @Column(name = "shelter_name")
+    @Column(name = "shelter_name")
     private String shelterName;
 
-    //    @Column(name = "address")
+    @Column(name = "address")
     private String address;
 
-    //    @Column(name = "shelter_phone")
+    @Column(name = "shelter_phone")
     private String shelterPhone;
 
-    //    @Column(name = "security_phone")
+    @Column(name = "security_phone")
     private String securityPhone;
 
-    //    @Column(name = "driving_directions")
+    @Column(name = "driving_directions")
     private String drivingDirections;
 
-    //    @Column(name = "safety_recommendations")
+    @Column(name = "safety_recommendations")
     private String safetyRecommendations;
 
-    //    @Column(name = "shelter_info")
+    @Column(name = "shelter_info")
     private String shelterInfo;
 
     @OneToMany(mappedBy = "shelterBuddy", cascade = CascadeType.ALL)
