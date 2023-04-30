@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -28,20 +29,15 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-//@Service
+@Service
 public class TelegramBotUpdatesListener {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final TelegramBot telegramBot;
     private final ShelterModeService shelterModeService = ShelterModeService.getInstance();
-
     private final ShelterDao shelterDao;
     private final ShelterClientsDao shelterClientsDao;
 
-
-//    public TelegramBotUpdatesListener(TelegramBot telegramBot) {
-//        this.telegramBot = telegramBot;
-//    }
 
     @PostConstruct
     public void init() {
@@ -55,23 +51,25 @@ public class TelegramBotUpdatesListener {
 
     //обрабатываем каждое событие в боте
     public void process(Update update) {
+        try {
+            SendMessage request = null;
 
+            //события с кнопок InlineKeyboardMarkup
+            if (Objects.nonNull(update.callbackQuery())) {
+                request = handleCallback(update.callbackQuery());
+            }
 
-        SendMessage request = null;
+            //события с контактом и обычным сообщением
+            if (Objects.nonNull(update.message())) {
+                request = handleMassage(update.message());
+            }
 
-        //события с кнопок InlineKeyboardMarkup
-        if (Objects.nonNull(update.callbackQuery())) {
-            request = handleCallback(update.callbackQuery());
-        }
-
-        //события с контактом и обычным сообещнием
-        if (Objects.nonNull(update.message())) {
-            request = handleMassage(update.message());
-        }
-
-        //выполняет запрос
-        if (request != null) {
-            telegramBot.execute(request);
+            //выполняет запрос
+            if (request != null) {
+                telegramBot.execute(request);
+            }
+        } catch (Exception e) {
+            logger.error("Ошибка во время процесса обновления (update): ", e);
         }
     }
 
@@ -79,10 +77,10 @@ public class TelegramBotUpdatesListener {
 
         long chatId = message.chat().id();
 
-        //обрабатывваем отправку контакта и удаляем кнопки ReplyKeyboardRemove
+        //обрабатываем отправку контакта и удаляем кнопки ReplyKeyboardRemove
         if (Objects.nonNull(message.contact())) {
 
-            // Записываем контакт. Сейчас взяли или не взял животное ввел вручную, и вручную ввел shelter_id
+            // Записываем контакт. Сейчас взяли или не взяли животное, ввел вручную, и вручную ввел shelter_id
             ShelterClients shelterClients = new ShelterClients(message.contact().firstName() + " " + message.contact().lastName(), message.contact().phoneNumber(), false, shelterDao.findById(1).get());
             // метод репозитория сохранения
             shelterClientsDao.save(shelterClients);
@@ -102,9 +100,8 @@ public class TelegramBotUpdatesListener {
                     Какой вы ищите приют?""").replyMarkup(inlineKeyboard);
         } else {
             return new SendMessage(chatId, """
-                    Бот не знает такой команды введинте /start для начала работы с ботом""");
+                    Бот не знает такой команды. Введите /start для начала работы с ботом""");
         }
-
     }
 
     private SendMessage handleCallback(CallbackQuery callbackQuery) {
@@ -118,7 +115,7 @@ public class TelegramBotUpdatesListener {
             //десериализуем данные из события бота в объект
             callbackRequest = objectMapper.readValue(data, CallbackRequest.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error(String.valueOf(e));
         }
 
         if (Objects.isNull(callbackRequest)) {
@@ -127,7 +124,7 @@ public class TelegramBotUpdatesListener {
 
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
 
-        //пробегаем по всем возможным событиям и что то делаем
+        //пробегаем по всем возможным событиям и что-то делаем
         switch (callbackRequest) {
             case DOGS:
             case CATS:
@@ -178,7 +175,7 @@ public class TelegramBotUpdatesListener {
             case GET_ANIMAL:
                 return new SendMessage(chatId, "Рассказываю тебе как взять животное!");
             case REPORT_ANIMAL:
-                return new SendMessage(chatId, "Прислаю отчет о питомце!");
+                return new SendMessage(chatId, "Присылаю отчет о питомце!");
             case HELP:
             default:
                 return new SendMessage(chatId, "Вызываю волонтера!");
@@ -196,7 +193,3 @@ public class TelegramBotUpdatesListener {
         }
     }
 }
-
-
-
-
