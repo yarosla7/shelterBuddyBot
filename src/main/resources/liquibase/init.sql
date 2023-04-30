@@ -1,4 +1,6 @@
---liquibase formatted sql --changeset yarosla7: 1
+--liquibase formatted sql
+
+--changeset Yaroslav:1
 CREATE TABLE shelter_buddy
 (
     shelter_id             BIGSERIAL PRIMARY KEY,
@@ -18,19 +20,21 @@ CREATE TABLE shelter_clients
     took_animal BOOLEAN      NOT NULL,
     shelter_id  BIGINT       NOT NULL REFERENCES shelter_buddy (shelter_id) ON DELETE CASCADE
 );
-CREATE INDEX ON shelter_clients (shelter_id);
-COMMENT ON TABLE shelter_buddy IS 'Таблица, содержащая информацию об приютах для животных';
-COMMENT ON TABLE shelter_clients IS 'Таблица, содержащая информацию о клиентах, которые использовали приюты для животных';
-COMMENT ON COLUMN shelter_buddy.shelter_id IS 'Уникальный идентификатор для каждого приюта для животных';
-COMMENT ON COLUMN shelter_buddy.shelter_name IS 'Название приюта для животных';
-COMMENT ON COLUMN shelter_buddy.address IS 'Адрес приюта для животных';
-COMMENT ON COLUMN shelter_buddy.shelter_phone IS 'Номер телефона приюта для животных';
-COMMENT ON COLUMN shelter_buddy.security_phone IS 'Номер телефона экстренного контакта для приюта для животных';
-COMMENT ON COLUMN shelter_buddy.driving_directions IS 'Инструкции для проезда к приюту для животных';
-COMMENT ON COLUMN shelter_buddy.safety_recommendations IS 'Рекомендации по безопасности для посетителей приюта для животных';
-COMMENT ON COLUMN shelter_buddy.shelter_info IS 'Дополнительная информация о приюте для животных';
-COMMENT ON COLUMN shelter_clients.user_id IS 'Уникальный идентификатор для каждого клиента приютов для животных';
-COMMENT ON COLUMN shelter_clients.name IS 'Имя клиента, который использовал приют для животных';
-COMMENT ON COLUMN shelter_clients.number IS 'Номер телефона клиента, который использовал приют для животных';
-COMMENT ON COLUMN shelter_clients.took_animal IS 'True, если клиент взял животное из приюта';
-COMMENT ON COLUMN shelter_clients.shelter_id IS 'Внешний ключ, ссылающийся на приют для животных, который использовал клиент';
+
+--changeset Yaroslav:2
+
+INSERT INTO shelter_buddy (shelter_name, address, shelter_phone, security_phone, driving_directions,
+                           safety_recommendations, shelter_info)
+VALUES ('Приют "Собачий дом"', 'улица Чернышевского, дом 7', '+7 (812) 777-77-77', '+7 (812) 888-88-88',
+        'От станции метро "Площадь Восстания" до остановки "улица Чернышевского". Идти примерно 500 метров.',
+        'На территории приюта запрещается кормить животных из рук, использовать свой транспорт на территории приюта, прикармливать животных своими лекарствами или проводить ветеринарные манипуляции. Обращаться только к персоналу приюта',
+        'Приют "Собачий дом" был создан в 2010 году для временного содержания бездомных собак. Здесь живет большое количество животных, находящихся в поиске новых заботливых хозяев.');
+
+--changeset Yaroslav:3
+
+INSERT INTO shelter_buddy (shelter_name, address, shelter_phone, security_phone, driving_directions,
+                           safety_recommendations, shelter_info)
+VALUES ('Приют "Кошачий дом"', 'улица Белы Куна, дом 12', '+7 (812) 555-55-55', '+7 (812) 666-66-66',
+        'От станции метро "Ладожская" до остановки "улица Белы Куна". Идти примерно 300 метров.',
+        'На территории приюта запрещается кормить животных из рук, использовать свой транспорт на территории приюта, прикармливать животных своими лекарствами или проводить ветеринарные манипуляции. Обращаться только к персоналу приюта',
+        'Приют "Кошачий дом" был создан в 2005 году для временного содержания бездомных кошек. Здесь живет большое количество животных, находящихся в поиске новых заботливых хозяев.');

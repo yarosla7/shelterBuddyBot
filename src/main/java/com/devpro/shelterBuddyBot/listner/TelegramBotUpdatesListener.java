@@ -16,6 +16,7 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
+import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -73,6 +74,7 @@ public class TelegramBotUpdatesListener {
         }
     }
 
+    @Nullable
     private SendMessage handleMassage(Message message) {
 
         long chatId = message.chat().id();
@@ -81,7 +83,8 @@ public class TelegramBotUpdatesListener {
         if (Objects.nonNull(message.contact())) {
 
             // Записываем контакт. Сейчас взяли или не взяли животное, ввел вручную, и вручную ввел shelter_id
-            ShelterClients shelterClients = new ShelterClients(message.contact().firstName() + " " + message.contact().lastName(), message.contact().phoneNumber(), false, shelterDao.findById(1).get());
+//            ShelterClients shelterClients = new ShelterClients(message.contact().firstName(), message.contact().phoneNumber(), false, shelterDao.findById(1).get());
+            ShelterClients shelterClients = new ShelterClients(message.contact().firstName(), message.contact().phoneNumber(), false, shelterDao.findById(1).get());
             // метод репозитория сохранения
             shelterClientsDao.save(shelterClients);
             return new SendMessage(chatId, "Спасибо я записал твой номер!").replyMarkup(new ReplyKeyboardRemove());
@@ -162,7 +165,7 @@ public class TelegramBotUpdatesListener {
                 }
                 if (byId.isPresent()) {
 
-                    return new SendMessage(chatId, "Даю тебе номер телефона охраны! " + byId.get().getSecurityPhone());
+                    return new SendMessage(chatId, "Номер телефона охраны: " + byId.get().getSecurityPhone());
                 }
                 return new SendMessage(chatId, "Нету!");
             case SAFETY_PRECAUTIONS:
