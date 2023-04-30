@@ -28,7 +28,11 @@ public class ShelterClients {
         this.took_animal = took_animal;
         this.shelterBuddy = shelterBuddy;
     }
-
+    public ShelterClients(String name, String number, Boolean took_animal) {
+        this.name = name;
+        this.number = number;
+        this.took_animal = took_animal;
+    }
     public ShelterClients() {
 
     }
