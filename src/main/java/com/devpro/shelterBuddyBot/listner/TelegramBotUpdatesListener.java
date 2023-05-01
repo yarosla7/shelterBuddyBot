@@ -1,5 +1,6 @@
 package com.devpro.shelterBuddyBot.listner;
 
+import com.devpro.shelterBuddyBot.dao.AnimalAdviceDao;
 import com.devpro.shelterBuddyBot.dao.ShelterClientsDao;
 import com.devpro.shelterBuddyBot.dao.ShelterDao;
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
@@ -38,6 +39,7 @@ public class TelegramBotUpdatesListener {
     private final ShelterModeService shelterModeService = ShelterModeService.getInstance();
     private final ShelterDao shelterDao;
     private final ShelterClientsDao shelterClientsDao;
+    private final AnimalAdviceDao animalAdviceDao;
 
 
     @PostConstruct
@@ -87,7 +89,7 @@ public class TelegramBotUpdatesListener {
             ShelterClients shelterClients = new ShelterClients(message.contact().firstName(), message.contact().phoneNumber(), false, shelterDao.findById(1).get());
             // метод репозитория сохранения
             shelterClientsDao.save(shelterClients);
-            return new SendMessage(chatId, "Спасибо я записал твой номер!").replyMarkup(new ReplyKeyboardRemove());
+            return new SendMessage(chatId, "Спасибо, я записал твой контакт.").replyMarkup(new ReplyKeyboardRemove());
         }
 
         //обрабатываем старт
@@ -171,12 +173,12 @@ public class TelegramBotUpdatesListener {
             case SAFETY_PRECAUTIONS:
                 return new SendMessage(chatId, shelterDao.findById(1).get().getSafetyRecommendations());
             case SHELTER_CONTACTS:
-                return new SendMessage(chatId, "Даю тебе контакты приюта!");
+                return new SendMessage(chatId, "Номер телефона приюта: " + shelterDao.findById(1).get().getShelterPhone() + "\n" + shelterDao.findById(1).get().getDrivingDirections());
             case PUT_MY_PHONE:
                 Keyboard keyboard = new ReplyKeyboardMarkup(new KeyboardButton("Отдать свой номер телефона").requestContact(true));
                 return new SendMessage(chatId, "Забираю у тебя номер телефона!").replyMarkup(keyboard);
             case GET_ANIMAL:
-                return new SendMessage(chatId, "Рассказываю тебе как взять животное!");
+                return new SendMessage(chatId, animalAdviceDao.findById(1).get().getNecessaryDocuments());
             case REPORT_ANIMAL:
                 return new SendMessage(chatId, "Присылаю отчет о питомце!");
             case HELP:
