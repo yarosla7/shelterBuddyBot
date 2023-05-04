@@ -1,11 +1,16 @@
 package com.devpro.shelterBuddyBot.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "shelter_clients")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ShelterClients {
 
     @Id
@@ -16,7 +21,7 @@ public class ShelterClients {
 
     private String number;
 
-    private Boolean took_animal;
+    private Boolean tookAnimal;
 
     @ManyToOne
     @JoinColumn(name = "shelter_id")
@@ -26,29 +31,13 @@ public class ShelterClients {
     @JoinColumn(name = "animal_id", foreignKey = @ForeignKey(name = "animal_id"))
     private Animal animal;
 
-    public ShelterClients(String name, String number, Boolean took_animal, ShelterBuddy shelterBuddy) {
-        this.name = name;
-        this.number = number;
-        this.took_animal = took_animal;
-        this.shelterBuddy = shelterBuddy;
-    }
-
-    public ShelterClients(String name, String number, Boolean took_animal) {
-        this.name = name;
-        this.number = number;
-        this.took_animal = took_animal;
-    }
-    public ShelterClients() {
-
-    }
-
     @Override
     public String toString() {
         return "ShelterClients{" +
                 "userId=" + userId +
                 ", name='" + name + '\'' +
                 ", number='" + number + '\'' +
-                ", took_animal=" + took_animal +
+                ", took_animal=" + tookAnimal +
                 ", shelterBuddy=" + (shelterBuddy != null ? shelterBuddy.getShelterName() : "не установлен") +
                 '}';
     }

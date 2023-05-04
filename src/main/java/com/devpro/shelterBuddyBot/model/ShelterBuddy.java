@@ -9,7 +9,6 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "shelter_buddy")
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShelterBuddy {
@@ -18,25 +17,20 @@ public class ShelterBuddy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer shelterId;
 
-    @Column(name = "shelter_name")
     private String shelterName;
 
-    @Column(name = "address")
     private String address;
 
-    @Column(name = "shelter_phone")
+    private String schedule;
+
     private String shelterPhone;
 
-    @Column(name = "security_phone")
     private String securityPhone;
 
-    @Column(name = "driving_directions")
     private String drivingDirections;
 
-    @Column(name = "safety_recommendations")
     private String safetyRecommendations;
 
-    @Column(name = "shelter_info")
     private String shelterInfo;
 
     @OneToMany(mappedBy = "shelterBuddy", cascade = CascadeType.ALL)
@@ -54,5 +48,13 @@ public class ShelterBuddy {
                 ", safetyRecommendations='" + safetyRecommendations + '\'' +
                 ", shelterInfo='" + shelterInfo + '\'' +
                 '}';
+    }
+
+    public String getContacts() {
+        return shelterName + ":\n" +
+                "\n\uD83C\uDFE1 Адрес: " + address +
+                "\n⏱График работы: " + schedule +
+                "\n\uD83D\uDCDE Телефон: " + shelterPhone +
+                "\n\uD83D\uDE98 Схема проезда: " + drivingDirections;
     }
 }
