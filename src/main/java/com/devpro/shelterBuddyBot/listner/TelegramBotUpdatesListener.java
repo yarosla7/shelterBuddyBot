@@ -48,7 +48,11 @@ public class TelegramBotUpdatesListener {
 
             //события с контактом и обычным сообщением
             if (Objects.nonNull(update.message())) {
-                request = messageHandler.messageProcessing(update.message());
+                if (Objects.nonNull(update.message().contact())) {
+                    request = messageHandler.contactProcessing(update.message());
+                } else {
+                    request = messageHandler.messageProcessing(update.message());
+                }
             }
 
             //выполняет запрос

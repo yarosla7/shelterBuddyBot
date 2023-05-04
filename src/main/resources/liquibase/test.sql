@@ -113,3 +113,19 @@ CREATE TABLE reports
 
 ALTER TABLE animal_advice
     ADD COLUMN id BIGSERIAL PRIMARY KEY;
+
+--changeset Vladimir:1
+
+
+CREATE TABLE choice
+(
+    id           BIGINT,
+    shelter_type VARCHAR(255)
+);
+
+--changeset Vladimir:2
+
+ALTER TABLE shelter_buddy
+    ADD COLUMN schedule varchar(320);
+UPDATE shelter_buddy set schedule='С 8:00 до 21:00, без выходных' where shelter_id = 1;
+UPDATE shelter_buddy set schedule='С 9:00 до 22:00, без выходных' where shelter_id = 2;
