@@ -1,4 +1,4 @@
-package com.devpro.shelterBuddyBot.configuration;
+package com.devpro.shelterBuddyBot.bot.configuration;
 
 import com.pengrad.telegrambot.TelegramBot;
 import org.springframework.beans.factory.annotation.Value;
