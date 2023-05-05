@@ -21,8 +21,10 @@
 - Java (JDK 19);
 - Spring-boot;
 - Telegram API ([Pengrad 6.6.1](https://github.com/pengrad/java-telegram-bot-api));
-- Maven
-- Lombok
+- Maven;
+- Lombok;
+- PostgresSQL;
+- Liquibase (миграция баз данных).
 
 ## Запуск проекта
 
