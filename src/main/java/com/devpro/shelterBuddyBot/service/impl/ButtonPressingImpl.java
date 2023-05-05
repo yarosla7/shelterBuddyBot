@@ -1,7 +1,7 @@
 package com.devpro.shelterBuddyBot.service.impl;
 
-import com.devpro.shelterBuddyBot.dao.ChoiceDao;
-import com.devpro.shelterBuddyBot.listner.TelegramBotUpdatesListener;
+import com.devpro.shelterBuddyBot.repository.dao.ChoiceDao;
+import com.devpro.shelterBuddyBot.bot.listner.TelegramBotUpdatesListener;
 import com.devpro.shelterBuddyBot.model.Choice;
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
 import com.devpro.shelterBuddyBot.service.ButtonPressing;
