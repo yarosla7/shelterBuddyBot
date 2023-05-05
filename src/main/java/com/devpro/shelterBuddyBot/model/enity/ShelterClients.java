@@ -1,7 +1,6 @@
 package com.devpro.shelterBuddyBot.model.enity;
 
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
-import com.devpro.shelterBuddyBot.model.shelter.Animal;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,9 +28,6 @@ public class ShelterClients {
     @JoinColumn(name = "shelter_id")
     private ShelterBuddy shelterBuddy;
 
-    @OneToOne
-    @JoinColumn(name = "animal_id", foreignKey = @ForeignKey(name = "animal_id"))
-    private Animal animal;
 
     @Override
     public String toString() {
