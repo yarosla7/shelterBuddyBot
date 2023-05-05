@@ -1,5 +1,7 @@
-package com.devpro.shelterBuddyBot.model;
+package com.devpro.shelterBuddyBot.model.enity;
 
+import com.devpro.shelterBuddyBot.model.ShelterBuddy;
+import com.devpro.shelterBuddyBot.model.shelter.Animal;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
