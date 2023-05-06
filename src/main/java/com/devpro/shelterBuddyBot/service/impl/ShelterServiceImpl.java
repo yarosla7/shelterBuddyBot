@@ -54,7 +54,7 @@ public class ShelterServiceImpl implements ShelterService {
         addButton(inlineKeyboard, CallbackRequest.STEP_BACK_CHOOSING_SHELTER.getName(), CallbackRequest.STEP_BACK_CHOOSING_SHELTER);
         addButton(inlineKeyboard, CallbackRequest.SHELTER_INFO.getName(), CallbackRequest.SHELTER_INFO);
         addButton(inlineKeyboard, CallbackRequest.GET_ANIMAL.getName(), CallbackRequest.GET_ANIMAL);
-        addButton(inlineKeyboard, CallbackRequest.REPORT_ANIMAL.getName(), CallbackRequest.SHELTER_INFO);
+        addButton(inlineKeyboard, CallbackRequest.REPORT_ANIMAL.getName(), CallbackRequest.REPORT_ANIMAL);
         addButton(inlineKeyboard, CallbackRequest.HELP.getName(), CallbackRequest.HELP);
     }
 
