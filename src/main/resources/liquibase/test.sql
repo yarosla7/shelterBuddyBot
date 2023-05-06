@@ -127,5 +127,22 @@ CREATE TABLE choice
 
 ALTER TABLE shelter_buddy
     ADD COLUMN schedule varchar(320);
-UPDATE shelter_buddy set schedule='С 8:00 до 21:00, без выходных' where shelter_id = 1;
-UPDATE shelter_buddy set schedule='С 9:00 до 22:00, без выходных' where shelter_id = 2;
+UPDATE shelter_buddy
+set schedule='С 8:00 до 21:00, без выходных'
+where shelter_id = 1;
+UPDATE shelter_buddy
+set schedule='С 9:00 до 22:00, без выходных'
+where shelter_id = 2;
+
+--changeset Vladimir:3
+
+ALTER TABLE animal_advice
+    RENAME COLUMN communication_with_grown_dog_advice to best_dog_handlers;
+
+-- changeset Vladimir:4
+
+UPDATE animal_advice SET best_dog_handlers = 'Контакты проверенных кинологов: 1. Иван Петров - petrov.kinolog@gmail.com, +7-999-123-45-67
+2. Елена Иванова - ivanova.kinolog@mail.ru, +7-977-890-12-34
+3. Алексей Смирнов - smirnov.kinolog@gmail.com, +7-925-456-78-90
+4. Ольга Кузнецова - kuznetsova.kinolog@mail.ru, +7-903-654-32-10
+5. Дмитрий Морозов - morozov.kinolog@gmail.com, +7-985-234-56-78' WHERE id = 1;
