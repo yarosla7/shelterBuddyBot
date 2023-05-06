@@ -1,9 +1,10 @@
 package com.devpro.shelterBuddyBot.service.impl;
 
-import com.devpro.shelterBuddyBot.repository.dao.ChoiceDao;
 import com.devpro.shelterBuddyBot.bot.listner.TelegramBotUpdatesListener;
 import com.devpro.shelterBuddyBot.model.Choice;
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
+import com.devpro.shelterBuddyBot.repository.dao.AnimalAdviceDao;
+import com.devpro.shelterBuddyBot.repository.dao.ChoiceDao;
 import com.devpro.shelterBuddyBot.service.ButtonPressing;
 import com.devpro.shelterBuddyBot.service.ShelterService;
 import com.devpro.shelterBuddyBot.util.CallbackRequest;
@@ -31,6 +32,7 @@ public class ButtonPressingImpl implements ButtonPressing {
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final ShelterService service;
     private final ChoiceDao choiceDao;
+    private final AnimalAdviceDao animalAdviceDao;
 
     @Override
     public SendMessage handleCallback(CallbackQuery callbackQuery) {
@@ -59,7 +61,13 @@ public class ButtonPressingImpl implements ButtonPressing {
                 //добавляем кнопки
                 service.showButtonsForDogsCats(inlineKeyboard);
 
-                return new SendMessage(chatId, "Отличный выбор! Чем я могу тебе помочь?").replyMarkup(inlineKeyboard);
+                if (choiceDao.findById(chatId).isPresent()) {
+                    if (Objects.equals(choiceDao.findById(chatId).get().getShelterType(), CallbackRequest.DOGS.getCode())) {
+                        return new SendMessage(chatId, "Выбран приют для собак, чем я могу тебе помочь?\uD83D\uDC15").replyMarkup(inlineKeyboard);
+                    } else {
+                        return new SendMessage(chatId, "Выбран приют для кошек, чем я могу тебе помочь?\uD83D\uDC08\u200D⬛").replyMarkup(inlineKeyboard);
+                    }
+                }
             case SHELTER_INFO:
                 service.showButtonsForShelterInfo(inlineKeyboard);
                 return new SendMessage(chatId, "Что именно тебя интересует?").replyMarkup(inlineKeyboard);
@@ -84,12 +92,74 @@ public class ButtonPressingImpl implements ButtonPressing {
                     return new SendMessage(chatId, shelterBuddy.get().getContacts());
                 }
             case PUT_MY_PHONE:
-                Keyboard keyboard = new ReplyKeyboardMarkup(new KeyboardButton("Отдать свой номер телефона").requestContact(true));
-                return new SendMessage(chatId, "Забираю у тебя номер телефона!").replyMarkup(keyboard);
+                Keyboard keyboard = new ReplyKeyboardMarkup(new KeyboardButton("Поделиться номером телефона").requestContact(true));
+                return new SendMessage(chatId, "Нажмите 'Поделиться номером телефона' что бы записать ваши контактные данные!").replyMarkup(keyboard);
             case GET_ANIMAL:
-                return new SendMessage(chatId, "Рассказываю тебе как взять животное!");
+                if (choiceDao.findById(chatId).isPresent()) {
+                    if (Objects.equals(choiceDao.findById(chatId).get().getShelterType(), CallbackRequest.DOGS.getCode())) {
+                        service.showButtonsForHowTakeDog(inlineKeyboard);
+                        return new SendMessage(chatId, "Как взять собаку из приюта?").replyMarkup(inlineKeyboard);
+                    } else {
+                        service.showButtonsForHowTakeCat(inlineKeyboard);
+                    }
+                    return new SendMessage(chatId, "Как взять кошку из приюта?").replyMarkup(inlineKeyboard);
+                }
             case REPORT_ANIMAL:
                 return new SendMessage(chatId, "Присылаю отчет о питомце!");
+
+            case INTRODUCTION_RULES:
+                if (animalAdviceDao.findById(1).isPresent()) {
+                    return new SendMessage(chatId, animalAdviceDao.findById(1).get().getIntroductionRules());
+                }
+            case NECESSARY_DOCUMENTS:
+                if (animalAdviceDao.findById(1).isPresent()) {
+                    return new SendMessage(chatId, animalAdviceDao.findById(1).get().getNecessaryDocuments());
+                }
+            case TRANSPORTATION_RECOMMENDATIONS:
+                if (animalAdviceDao.findById(1).isPresent()) {
+                    return new SendMessage(chatId, animalAdviceDao.findById(1).get().getTransportationRecommendations());
+                }
+            case PUPPY_HOME_ARRANGEMENT:
+                if (animalAdviceDao.findById(1).isPresent()) {
+                    return new SendMessage(chatId, animalAdviceDao.findById(1).get().getPuppyHomeArrangement());
+                }
+            case ADULT_HOME_ARRANGEMENT:
+                if (animalAdviceDao.findById(1).isPresent()) {
+                    return new SendMessage(chatId, animalAdviceDao.findById(1).get().getAdultHomeArrangement());
+                }
+            case HOME_ARRANGEMENT_WITH_LIMITED_ABILITY:
+                if (animalAdviceDao.findById(1).isPresent()) {
+                    return new SendMessage(chatId, animalAdviceDao.findById(1).get().getHomeArrangementWithLimitedAbility());
+                }
+            case INITIAL_COMMUNICATION_WITH_DOG_ADVICE:
+                if (animalAdviceDao.findById(1).isPresent()) {
+                    return new SendMessage(chatId, animalAdviceDao.findById(1).get().getInitialCommunicationWithDogAdvice());
+                }
+            case BEST_DOG_HANDLERS:
+                if (animalAdviceDao.findById(1).isPresent()) {
+                    return new SendMessage(chatId, animalAdviceDao.findById(1).get().getBestDogHandlers());
+                }
+            case REASONS_FOR_REFUSING_ANIMAL_TRANSFER:
+                if (animalAdviceDao.findById(1).isPresent()) {
+                    return new SendMessage(chatId, animalAdviceDao.findById(1).get().getReasonsForRefusingAnimalTransfer());
+                }
+            case KITTEN_HOME_ARRANGEMENT:
+                if (animalAdviceDao.findById(1).isPresent()) {
+                    return new SendMessage(chatId, animalAdviceDao.findById(1).get().getKittenHomeArrangement());
+                }
+            case STEP_BACK_INFO_SHELTER:
+                service.showButtonsForDogsCats(inlineKeyboard);
+                if (choiceDao.findById(chatId).isPresent()) {
+                    if (Objects.equals(choiceDao.findById(chatId).get().getShelterType(), CallbackRequest.DOGS.getCode())) {
+                        return new SendMessage(chatId, "Выбран приют для собак, чем я могу тебе помочь?\uD83D\uDC15").replyMarkup(inlineKeyboard);
+                    } else {
+                        return new SendMessage(chatId, "Выбран приют для кошек, чем я могу тебе помочь?\uD83D\uDC08\u200D⬛").replyMarkup(inlineKeyboard);
+                    }
+                }
+            case STEP_BACK_CHOOSING_SHELTER:
+                service.addButton(inlineKeyboard, CallbackRequest.CATS.getName(), CallbackRequest.CATS);
+                service.addButton(inlineKeyboard, CallbackRequest.DOGS.getName(), CallbackRequest.DOGS);
+                return new SendMessage(chatId, " Какой приют вы ищите?").replyMarkup(inlineKeyboard);
             case HELP:
             default:
                 return new SendMessage(chatId, "Вызываю волонтера!");

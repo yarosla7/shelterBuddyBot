@@ -1,8 +1,8 @@
 package com.devpro.shelterBuddyBot.service.impl;
 
-import com.devpro.shelterBuddyBot.repository.dao.ShelterClientsDao;
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
 import com.devpro.shelterBuddyBot.model.enity.ShelterClients;
+import com.devpro.shelterBuddyBot.repository.dao.ShelterClientsDao;
 import com.devpro.shelterBuddyBot.service.MessageHandler;
 import com.devpro.shelterBuddyBot.service.ShelterService;
 import com.devpro.shelterBuddyBot.util.CallbackRequest;
@@ -45,7 +45,7 @@ public class MessageHandlerImpl implements MessageHandler {
             return new SendMessage(chatId, "Не удалось записать номер!").replyMarkup(new ReplyKeyboardRemove());
         }
 
-        return new SendMessage(chatId, "Спасибо я записал твой номер!").replyMarkup(new ReplyKeyboardRemove());
+        return new SendMessage(chatId, "Спасибо " + message.contact().firstName() + " я записал твой номер! ✅").replyMarkup(new ReplyKeyboardRemove());
     }
 
     //обрабатываем старт
@@ -60,10 +60,9 @@ public class MessageHandlerImpl implements MessageHandler {
             service.addButton(inlineKeyboard, CallbackRequest.CATS.getName(), CallbackRequest.CATS);
             service.addButton(inlineKeyboard, CallbackRequest.DOGS.getName(), CallbackRequest.DOGS);
 
-            return new SendMessage(chatId, """
-                    Привет я расскажу тебе о приютах нашего города и помогу тебе найти  или пристроить потеряшку!
-
-                    Какой вы ищите приют?""").replyMarkup(inlineKeyboard);
+            //Тут берется имя прямо с чата, если будет общий чат будет выводиться имя чата поидеи.
+            return new SendMessage(chatId, "Привет " + message.chat().firstName() + "!"
+                    + "\nЯ расскажу тебе о приютах нашего города и помогу тебе найти или пристроить потеряшку! \n\nКакой приют вы ищите?").replyMarkup(inlineKeyboard);
         } else {
             return new SendMessage(chatId, """
                     Бот не знает такой команды. Введите /start для начала работы с ботом""");
