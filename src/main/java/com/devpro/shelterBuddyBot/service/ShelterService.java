@@ -15,4 +15,8 @@ public interface ShelterService {
     void showButtonsForDogsCats(InlineKeyboardMarkup inlineKeyboard);
 
     void showButtonsForShelterInfo(InlineKeyboardMarkup inlineKeyboard);
+
+    void showButtonsForHowTakeDog(InlineKeyboardMarkup inlineKeyboard);
+
+    void showButtonsForHowTakeCat(InlineKeyboardMarkup inlineKeyboard);
 }

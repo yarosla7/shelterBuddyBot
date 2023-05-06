@@ -127,5 +127,15 @@ CREATE TABLE choice
 
 ALTER TABLE shelter_buddy
     ADD COLUMN schedule varchar(320);
-UPDATE shelter_buddy set schedule='С 8:00 до 21:00, без выходных' where shelter_id = 1;
-UPDATE shelter_buddy set schedule='С 9:00 до 22:00, без выходных' where shelter_id = 2;
+UPDATE shelter_buddy
+set schedule='С 8:00 до 21:00, без выходных'
+where shelter_id = 1;
+UPDATE shelter_buddy
+set schedule='С 9:00 до 22:00, без выходных'
+where shelter_id = 2;
+
+--changeset Vladimir:3
+
+ALTER TABLE animal_advice
+    RENAME COLUMN communication_with_grown_dog_advice to best_dog_handlers;
+
