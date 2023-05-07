@@ -46,11 +46,6 @@ public class ButtonPressingImpl implements ButtonPressing {
 
         Optional<Choice> choice = choiceDao.findById(chatId);
 
-//        if (choice.isPresent()) {
-//            CallbackRequest choice1 = CallbackRequest.getValueByCode(choice.get().getShelterType());
-//        }
-
-
         if (Objects.isNull(callbackRequest)) {
             return new SendMessage(chatId, "Вызываю волонтера!");
         }
