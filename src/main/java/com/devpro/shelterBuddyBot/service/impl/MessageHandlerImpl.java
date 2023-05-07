@@ -1,7 +1,7 @@
 package com.devpro.shelterBuddyBot.service.impl;
 
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
-import com.devpro.shelterBuddyBot.model.enity.ShelterClients;
+import com.devpro.shelterBuddyBot.model.entity.ShelterClients;
 import com.devpro.shelterBuddyBot.repository.dao.ShelterClientsDao;
 import com.devpro.shelterBuddyBot.service.MessageHandler;
 import com.devpro.shelterBuddyBot.service.ShelterService;

@@ -1,4 +1,4 @@
-package com.devpro.shelterBuddyBot.model.enity;
+package com.devpro.shelterBuddyBot.model.entity;
 
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
 import jakarta.persistence.*;

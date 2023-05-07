@@ -1,6 +1,6 @@
 package com.devpro.shelterBuddyBot.model;
 
-import com.devpro.shelterBuddyBot.model.enity.ShelterClients;
+import com.devpro.shelterBuddyBot.model.entity.ShelterClients;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
