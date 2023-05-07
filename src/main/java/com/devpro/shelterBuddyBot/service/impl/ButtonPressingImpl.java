@@ -41,8 +41,15 @@ public class ButtonPressingImpl implements ButtonPressing {
         long chatId = message.chat().id();
         String data = callbackQuery.data();
         Optional<ShelterBuddy> shelterBuddy;
-
+        Optional<AnimalAdvice> animalAdvice = animalAdviceDao.findById(1);
         CallbackRequest callbackRequest = getCallbackRequest(data);
+
+        Optional<Choice> choice = choiceDao.findById(chatId);
+
+//        if (choice.isPresent()) {
+//            CallbackRequest choice1 = CallbackRequest.getValueByCode(choice.get().getShelterType());
+//        }
+
 
         if (Objects.isNull(callbackRequest)) {
             return new SendMessage(chatId, "Вызываю волонтера!");
@@ -51,8 +58,6 @@ public class ButtonPressingImpl implements ButtonPressing {
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
 
         //пробегаем по всем возможным событиям и что-то делаем
-        Optional<AnimalAdvice> animalAdvice = animalAdviceDao.findById(1);
-        Optional<Choice> choice = choiceDao.findById(chatId);
 
         switch (callbackRequest) {
             case DOGS:
@@ -66,7 +71,7 @@ public class ButtonPressingImpl implements ButtonPressing {
                 service.showButtonsForDogsCats(inlineKeyboard);
 
                 if (choice.isPresent()) {
-                    if (Objects.equals(choice.get().getShelterType(), CallbackRequest.DOGS.getCode())) {
+                    if (callbackRequest == CallbackRequest.DOGS) {
                         return new SendMessage(chatId, "Выбран приют для собак, чем я могу тебе помочь?\uD83D\uDC15").replyMarkup(inlineKeyboard);
                     } else {
                         return new SendMessage(chatId, "Выбран приют для кошек, чем я могу тебе помочь?\uD83D\uDC08\u200D⬛").replyMarkup(inlineKeyboard);
@@ -99,6 +104,7 @@ public class ButtonPressingImpl implements ButtonPressing {
                 Keyboard keyboard = new ReplyKeyboardMarkup(new KeyboardButton("Поделиться номером телефона").requestContact(true));
                 return new SendMessage(chatId, "Нажмите 'Поделиться номером телефона' что бы записать ваши контактные данные!").replyMarkup(keyboard);
             case GET_ANIMAL:
+
                 if (choice.isPresent()) {
                     if (Objects.equals(choice.get().getShelterType(), CallbackRequest.DOGS.getCode())) {
                         service.showButtonsForHowTakeDog(inlineKeyboard);
@@ -153,6 +159,7 @@ public class ButtonPressingImpl implements ButtonPressing {
                 }
             case STEP_BACK_INFO_SHELTER:
                 service.showButtonsForDogsCats(inlineKeyboard);
+
                 if (choice.isPresent()) {
                     if (Objects.equals(choice.get().getShelterType(), CallbackRequest.DOGS.getCode())) {
                         return new SendMessage(chatId, "Выбран приют для собак, чем я могу тебе помочь?\uD83D\uDC15").replyMarkup(inlineKeyboard);
@@ -180,7 +187,6 @@ public class ButtonPressingImpl implements ButtonPressing {
         } catch (JsonProcessingException e) {
             logger.error(String.valueOf(e));
         }
-
         return callbackRequest;
     }
 }
