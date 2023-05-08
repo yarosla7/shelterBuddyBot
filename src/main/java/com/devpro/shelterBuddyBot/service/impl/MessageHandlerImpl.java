@@ -88,8 +88,8 @@ public class MessageHandlerImpl implements MessageHandler {
         try {
             Optional<ShelterBuddy> shelterBuddy = service.getShelterBuddy(chatId);
             for (ShelterClients shelterClients : shelterClientsDao.findAll()) {
-                String clientsNumber = shelterClients.getNumber();
-                String newClientNumber = message.contact().phoneNumber();
+                String clientsNumber = shelterClients.getNumber().replace("+", "");
+                String newClientNumber = message.contact().phoneNumber().replace("+", "");
                 if (shelterBuddy.isPresent()) {
                     if (clientsNumber.equals(newClientNumber) && shelterClients.getShelterBuddy().getShelterName().equals(shelterBuddy.get().getShelterName())) {
                         checkNumber = false;
