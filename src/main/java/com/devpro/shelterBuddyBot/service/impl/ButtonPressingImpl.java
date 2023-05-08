@@ -43,12 +43,7 @@ public class ButtonPressingImpl implements ButtonPressing {
         Optional<ShelterBuddy> shelterBuddy;
         Optional<AnimalAdvice> animalAdvice = animalAdviceDao.findById(1);
         CallbackRequest callbackRequest = getCallbackRequest(data);
-
         Optional<Choice> choice = choiceDao.findById(chatId);
-
-        if (Objects.isNull(callbackRequest)) {
-            return new SendMessage(chatId, "Вызываю волонтера!");
-        }
 
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
 
@@ -61,7 +56,7 @@ public class ButtonPressingImpl implements ButtonPressing {
                         .id(chatId)
                         .shelterType(callbackRequest.getCode())
                         .build());
-
+                choice = choiceDao.findById(chatId);
                 //добавляем кнопки
                 service.showButtonsForDogsCats(inlineKeyboard);
 

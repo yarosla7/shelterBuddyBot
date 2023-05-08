@@ -33,13 +33,17 @@ public class MessageHandlerImpl implements MessageHandler {
         try {
             // метод репозитория сохранения
             Optional<ShelterBuddy> shelterBuddy = service.getShelterBuddy(chatId);
-            shelterBuddy.ifPresent(buddy -> shelterClientsDao.save(ShelterClients.builder()
-                    .tookAnimal(false)
-                    .name(message.contact().firstName())
-                    .number(message.contact().phoneNumber())
-                    .shelterBuddy(buddy)
-                    .build()));
 
+            if (checkClientNumber(message)) {
+                shelterBuddy.ifPresent(buddy -> shelterClientsDao.save(ShelterClients.builder()
+                        .tookAnimal(false)
+                        .name(message.contact().firstName())
+                        .number(message.contact().phoneNumber())
+                        .shelterBuddy(buddy)
+                        .build()));
+            } else {
+                return new SendMessage(chatId, "Ваш номер телефона уже есть в базе данных этого приюта!").replyMarkup(new ReplyKeyboardRemove());
+            }
         } catch (Exception e) {
             return new SendMessage(chatId, "Не удалось записать номер!").replyMarkup(new ReplyKeyboardRemove());
         }
@@ -47,7 +51,6 @@ public class MessageHandlerImpl implements MessageHandler {
         if (Objects.isNull(message.contact().firstName())) {
             userName = "";
         }
-
         return new SendMessage(chatId, "Спасибо," + userName + " я записал твой номер! ✅").replyMarkup(new ReplyKeyboardRemove());
     }
 
@@ -76,5 +79,27 @@ public class MessageHandlerImpl implements MessageHandler {
             return new SendMessage(chatId, """
                     Бот не знает такой команды. Введите /start для начала работы с ботом""");
         }
+    }
+
+    // Метод проверки на совпадение номера телефона и shelter_name, юзера и Юзеров в бд
+    private Boolean checkClientNumber(Message message) {
+        boolean checkNumber = true;
+        long chatId = message.chat().id();
+        try {
+            Optional<ShelterBuddy> shelterBuddy = service.getShelterBuddy(chatId);
+            for (ShelterClients shelterClients : shelterClientsDao.findAll()) {
+                String clientsNumber = shelterClients.getNumber();
+                String newClientNumber = message.contact().phoneNumber();
+                if (shelterBuddy.isPresent()) {
+                    if (clientsNumber.equals(newClientNumber) && shelterClients.getShelterBuddy().getShelterName().equals(shelterBuddy.get().getShelterName())) {
+                        checkNumber = false;
+                    }
+                }
+            }
+            // Эексепшен сейчас стоит рандомный, нужно будет вписать правильный.
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return checkNumber;
     }
 }
