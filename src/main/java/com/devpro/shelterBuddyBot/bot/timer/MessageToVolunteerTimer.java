@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class MessageToVolunteerTimer {
     private final MessageToVolunteerService messageToVolunteerService;
     private final ShelterService shelterService;
+    private final ButtonPressing buttonPressing;
     private final CatOwnerService catOwnerService;
     private final TrialPeriodService trialPeriodService;
     private final TelegramBotUpdatesListener telegramBotUpdatesListener;
