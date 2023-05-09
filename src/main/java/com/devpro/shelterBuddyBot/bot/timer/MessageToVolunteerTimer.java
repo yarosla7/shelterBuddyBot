@@ -13,13 +13,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 public class MessageToVolunteerTimer {
-    private final MessageToVolunteerService messageToVolunteerService;
-    private final ShelterService shelterService;
-    private final ButtonPressing buttonPressing;
-    private final CatOwnerService catOwnerService;
-    private final TrialPeriodService trialPeriodService;
-    private final TelegramBotUpdatesListener telegramBotUpdatesListener;
-    private final CatShelterService catShelterService;
-    private final CatService catService;
 
+    // дописать, настя, как разберешься с ебаной базой
 }
