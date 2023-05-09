@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class MessageToVolunteerTimer {
     private final MessageToVolunteerService messageToVolunteerService;
-    private final UserService userService;
+    private final ShelterService shelterService;
     private final CatOwnerService catOwnerService;
     private final TrialPeriodService trialPeriodService;
     private final TelegramBotUpdatesListener telegramBotUpdatesListener;
