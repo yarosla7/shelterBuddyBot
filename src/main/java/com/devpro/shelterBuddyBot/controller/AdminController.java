@@ -31,6 +31,7 @@ public class AdminController {
         }
     }
 
+    // можно удалить смотрим через бота
     @GetMapping("/show-reports")
     @Operation(summary = "Посмотреть отчеты")
     public List<Reports> showAllReports() {

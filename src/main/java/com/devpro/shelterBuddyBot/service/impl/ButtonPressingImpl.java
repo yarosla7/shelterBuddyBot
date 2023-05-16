@@ -269,9 +269,11 @@ public class ButtonPressingImpl implements ButtonPressing {
                         user.get().setTookAnimal(false);
                         user.get().setAnimal(null);
                         animal.get().setAdopted(true);
+                        String userName = service.getUserName(user.get().getName());
                         service.addButton(inlineKeyboard, CallbackRequest.SHOW_REPORTS.getName() + ": " + adminService.countReport(), CallbackRequest.SHOW_REPORTS);
                         service.addButton(inlineKeyboard, CallbackRequest.SHOW_ANIMALS.getName() + ": " + adminService.countApplicantAnimals(), CallbackRequest.SHOW_ANIMALS);
                         Integer userChatId = user.get().getChatId();
+                        telegramBot.execute(new SendMessage(chatId, "✅Вы подтвердили усыновление, клиенту " + userName));
                         telegramBot.execute(new SendMessage(userChatId, "✅Вы успешно прошли испытательный период! Удачи!"));
                         return new SendMessage(chatId, "\uD83E\uDDF0Вы находитесь в административном меню").replyMarkup(inlineKeyboard);
                     }
@@ -290,9 +292,11 @@ public class ButtonPressingImpl implements ButtonPressing {
                         animal.get().setInShelter(true);
                         animal.get().setAdoptDate(null);
                         Integer userChatId = user.get().getChatId();
+                        String userName = service.getUserName(user.get().getName());
 
                         service.addButton(inlineKeyboard, CallbackRequest.SHOW_REPORTS.getName() + ": " + adminService.countReport(), CallbackRequest.SHOW_REPORTS);
                         service.addButton(inlineKeyboard, CallbackRequest.SHOW_ANIMALS.getName() + ": " + adminService.countApplicantAnimals(), CallbackRequest.SHOW_ANIMALS);
+                        telegramBot.execute(new SendMessage(chatId, "❌Вы отказали в усыновлении животного усыновителю " + userName));
                         telegramBot.execute(new SendMessage(userChatId, "❌Вы не прошли испытательный период, волонтер свяжется с вами что бы забрать животное в приют!"));
                         return new SendMessage(chatId, "\uD83E\uDDF0Вы находитесь в административном меню").replyMarkup(inlineKeyboard);
                     }
