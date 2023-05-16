@@ -2,12 +2,11 @@ package com.devpro.shelterBuddyBot.model.entity;
 
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity
 @Builder
 @NoArgsConstructor
@@ -24,19 +23,17 @@ public class ShelterClients {
 
     private Boolean tookAnimal;
 
+    private Integer chatId;
+
+
+    @ToString.Exclude
+    @OneToOne
+    @JoinColumn(name = "animal_id")
+    private Animal animal;
+
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "shelter_id")
     private ShelterBuddy shelterBuddy;
 
-
-    @Override
-    public String toString() {
-        return "ShelterClients{" +
-                "userId=" + userId +
-                ", name='" + name + '\'' +
-                ", number='" + number + '\'' +
-                ", took_animal=" + tookAnimal +
-                ", shelterBuddy=" + (shelterBuddy != null ? shelterBuddy.getShelterName() : "не установлен") +
-                '}';
-    }
 }

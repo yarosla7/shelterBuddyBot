@@ -26,4 +26,6 @@ public interface MessageHandler {
      */
     @Nullable
     SendMessage messageProcessing(Message message);
+
+    SendMessage reportProcessing(Message message);
 }

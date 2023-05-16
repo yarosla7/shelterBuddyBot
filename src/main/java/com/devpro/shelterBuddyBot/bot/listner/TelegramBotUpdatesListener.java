@@ -48,6 +48,9 @@ public class TelegramBotUpdatesListener {
             if (Objects.nonNull(update.message())) {
                 if (Objects.nonNull(update.message().contact())) {
                     request = messageHandler.contactProcessing(update.message());
+                } else if (Objects.nonNull(update.message().caption())
+                        || Objects.nonNull(update.message().photo())) {
+                    request = messageHandler.reportProcessing(update.message());
                 } else {
                     request = messageHandler.messageProcessing(update.message());
                 }

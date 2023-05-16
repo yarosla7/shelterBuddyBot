@@ -2,17 +2,21 @@ package com.devpro.shelterBuddyBot.service.impl;
 
 import com.devpro.shelterBuddyBot.model.Choice;
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
+import com.devpro.shelterBuddyBot.model.entity.ShelterClients;
 import com.devpro.shelterBuddyBot.repository.dao.ChoiceDao;
+import com.devpro.shelterBuddyBot.repository.dao.ShelterClientsDao;
 import com.devpro.shelterBuddyBot.repository.dao.ShelterDao;
 import com.devpro.shelterBuddyBot.service.ShelterService;
 import com.devpro.shelterBuddyBot.util.CallbackRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -20,6 +24,7 @@ import java.util.Optional;
 public class ShelterServiceImpl implements ShelterService {
     private final ChoiceDao choiceDao;
     private final ShelterDao shelterDao;
+    private final ShelterClientsDao shelterClientsDao;
 
     @Override
     public void addButton(InlineKeyboardMarkup inlineKeyboard, String buttonName, CallbackRequest callbackData) {
@@ -47,6 +52,38 @@ public class ShelterServiceImpl implements ShelterService {
             }
         }
         return shelterBuddy;
+    }
+
+    @Override
+    // Метод проверки на совпадение номера телефона и shelter_name, юзера и Юзеров в бд
+    public Boolean checkClientNumber(Message message) {
+        boolean checkNumber = true;
+        long chatId = message.chat().id();
+        Optional<ShelterBuddy> shelterBuddy = getShelterBuddy(chatId);
+
+        if (shelterBuddy.isPresent()) {
+            Optional<ShelterClients> shelterClient = shelterClientsDao
+                    .findByShelterBuddyAndNumberLike(shelterBuddy.get(), "%" + message.contact().phoneNumber());
+            if (shelterClient.isPresent()) {
+                checkNumber = false;
+            }
+        }
+        return checkNumber;
+    }
+
+    @Override
+    public Boolean checkClientChatIdInShelter(Message message) {
+        boolean checkChatId = true;
+        int chatId = Math.toIntExact(message.chat().id());
+        Optional<ShelterBuddy> shelterBuddy = getShelterBuddy((long) chatId);
+
+        if (shelterBuddy.isPresent()) {
+            Optional<ShelterClients> shelterClient = shelterClientsDao.findByChatIdAndShelterBuddy(chatId, shelterBuddy.get());
+            if (shelterClient.isPresent()) {
+                checkChatId = false;
+            }
+        }
+        return checkChatId;
     }
 
     @Override
@@ -97,5 +134,14 @@ public class ShelterServiceImpl implements ShelterService {
         addButton(inlineKeyboard, CallbackRequest.REASONS_FOR_REFUSING_ANIMAL_TRANSFER.getName(), CallbackRequest.REASONS_FOR_REFUSING_ANIMAL_TRANSFER);
         addButton(inlineKeyboard, CallbackRequest.PUT_MY_PHONE.getName(), CallbackRequest.PUT_MY_PHONE);
         addButton(inlineKeyboard, CallbackRequest.HELP.getName(), CallbackRequest.HELP);
+    }
+
+    @Override
+    public String getUserName(String firstName) {
+        String userName = ", " + firstName;
+        if (Objects.isNull(firstName)) {
+            userName = "";
+        }
+        return userName;
     }
 }

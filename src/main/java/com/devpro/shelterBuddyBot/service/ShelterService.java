@@ -2,6 +2,7 @@ package com.devpro.shelterBuddyBot.service;
 
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
 import com.devpro.shelterBuddyBot.util.CallbackRequest;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.util.Optional;
@@ -28,6 +29,12 @@ public interface ShelterService {
      * @return найденный приют, либо пустой Optional, если приют не найден
      */
     Optional<ShelterBuddy> getShelterBuddy(Long chatId);
+
+
+    // Метод проверки на совпадение номера телефона и shelter_name, юзера и Юзеров в бд
+    Boolean checkClientNumber(Message message);
+
+    Boolean checkClientChatIdInShelter(Message message);
 
     /**
      * Отображает доступные кнопки для выбора типа приюта (для собак/для кошек).
@@ -57,4 +64,6 @@ public interface ShelterService {
      * @param inlineKeyboard объект для добавления кнопок
      */
     void showButtonsForHowTakeCat(InlineKeyboardMarkup inlineKeyboard);
+
+    String getUserName(String firstName);
 }

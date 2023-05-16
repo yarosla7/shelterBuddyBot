@@ -1,10 +1,12 @@
 package com.devpro.shelterBuddyBot.model;
 
 import com.devpro.shelterBuddyBot.model.entity.ShelterClients;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -34,22 +36,11 @@ public class ShelterBuddy {
 
     private String shelterInfo;
 
+    @ToString.Exclude
+    @JsonIgnore
     @OneToMany(mappedBy = "shelterBuddy", cascade = CascadeType.ALL)
     private List<ShelterClients> shelterClients;
 
-    @Override
-    public String toString() {
-        return "ShelterBuddy{" +
-                "shelterId=" + shelterId +
-                ", shelterName='" + shelterName + '\'' +
-                ", address='" + address + '\'' +
-                ", shelterPhone='" + shelterPhone + '\'' +
-                ", securityPhone='" + securityPhone + '\'' +
-                ", drivingDirections='" + drivingDirections + '\'' +
-                ", safetyRecommendations='" + safetyRecommendations + '\'' +
-                ", shelterInfo='" + shelterInfo + '\'' +
-                '}';
-    }
 
     public String getContacts() {
         return shelterName + ":\n" +

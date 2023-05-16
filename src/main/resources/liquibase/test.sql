@@ -146,3 +146,50 @@ UPDATE animal_advice SET best_dog_handlers = 'Контакты проверен�
 3. Алексей Смирнов - smirnov.kinolog@gmail.com, +7-925-456-78-90
 4. Ольга Кузнецова - kuznetsova.kinolog@mail.ru, +7-903-654-32-10
 5. Дмитрий Морозов - morozov.kinolog@gmail.com, +7-985-234-56-78' WHERE id = 1;
+
+--changeset Vladimir:5
+
+ALTER TABLE animals
+    ADD COLUMN type_of_animal VARCHAR(5);
+
+ALTER TABLE shelter_clients
+    ADD COLUMN chat_id INT;
+
+ALTER TABLE reports
+    ADD COLUMN is_report_ok BOOLEAN;
+
+CREATE TABLE volunteers (
+                            id INT PRIMARY KEY,
+                            chat_id INT NOT NULL,
+                            full_name VARCHAR(255) NOT NULL
+);
+
+ALTER TABLE shelter_clients
+    ADD COLUMN is_trial_ok BOOLEAN;
+
+--changeset Vladimir:9
+
+ALTER TABLE animals
+    ADD COLUMN adopt_date DATE;
+
+--changeset Vladimir:10
+
+ALTER TABLE reports
+    ADD COLUMN animal_id INT REFERENCES animals (animal_id);
+
+--changeset Vladimir:14
+drop table volunteers;
+
+CREATE TABLE volunteers (
+                            id BIGSERIAL PRIMARY KEY,
+                            chat_id BIGINT NOT NULL,
+                            full_name VARCHAR(255) NOT NULL
+);
+
+--changeset Vladimir:15
+
+ALTER TABLE animals
+    ADD COLUMN adopted BOOLEAN;
+
+--changeset Vladimir:16
+update animals set adopted = false;
