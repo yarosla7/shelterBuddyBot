@@ -141,11 +141,13 @@ ALTER TABLE animal_advice
 
 -- changeset Vladimir:4
 
-UPDATE animal_advice SET best_dog_handlers = 'Контакты проверенных кинологов: 1. Иван Петров - petrov.kinolog@gmail.com, +7-999-123-45-67
+UPDATE animal_advice
+SET best_dog_handlers = 'Контакты проверенных кинологов: 1. Иван Петров - petrov.kinolog@gmail.com, +7-999-123-45-67
 2. Елена Иванова - ivanova.kinolog@mail.ru, +7-977-890-12-34
 3. Алексей Смирнов - smirnov.kinolog@gmail.com, +7-925-456-78-90
 4. Ольга Кузнецова - kuznetsova.kinolog@mail.ru, +7-903-654-32-10
-5. Дмитрий Морозов - morozov.kinolog@gmail.com, +7-985-234-56-78' WHERE id = 1;
+5. Дмитрий Морозов - morozov.kinolog@gmail.com, +7-985-234-56-78'
+WHERE id = 1;
 
 --changeset Vladimir:5
 
@@ -158,10 +160,11 @@ ALTER TABLE shelter_clients
 ALTER TABLE reports
     ADD COLUMN is_report_ok BOOLEAN;
 
-CREATE TABLE volunteers (
-                            id INT PRIMARY KEY,
-                            chat_id INT NOT NULL,
-                            full_name VARCHAR(255) NOT NULL
+CREATE TABLE volunteers
+(
+    id        INT PRIMARY KEY,
+    chat_id   INT          NOT NULL,
+    full_name VARCHAR(255) NOT NULL
 );
 
 ALTER TABLE shelter_clients
@@ -180,10 +183,11 @@ ALTER TABLE reports
 --changeset Vladimir:14
 drop table volunteers;
 
-CREATE TABLE volunteers (
-                            id BIGSERIAL PRIMARY KEY,
-                            chat_id BIGINT NOT NULL,
-                            full_name VARCHAR(255) NOT NULL
+CREATE TABLE volunteers
+(
+    id        BIGSERIAL PRIMARY KEY,
+    chat_id   BIGINT       NOT NULL,
+    full_name VARCHAR(255) NOT NULL
 );
 
 --changeset Vladimir:15
@@ -192,4 +196,26 @@ ALTER TABLE animals
     ADD COLUMN adopted BOOLEAN;
 
 --changeset Vladimir:16
-update animals set adopted = false;
+update animals
+set adopted = false;
+
+--changeset Vladimir:17
+
+CREATE TABLE client_data_report
+(
+    id_report        INT          NOT NULL,
+    client_id        INT          NOT NULL,
+    photo_link       varchar(255) not null,
+    ration           TEXT         not null,
+    well_being       TEXT         not null,
+    behavior_changes TEXT         not null,
+    processed        BOOLEAN default false
+);
+
+--changeset Vladimir:18
+
+ALTER TABLE client_data_report drop column processed;
+
+--changeset Vladimir:19
+
+ALTER TABLE client_data_report add column processed boolean default false;

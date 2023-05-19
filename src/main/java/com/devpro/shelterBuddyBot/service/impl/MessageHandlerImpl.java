@@ -34,9 +34,7 @@ public class MessageHandlerImpl implements MessageHandler {
 
     @Nullable
     public SendMessage contactProcessing(Message message) {
-
         long chatId = message.chat().id();
-
         //обрабатываем отправку контакта и удаляем кнопки ReplyKeyboardRemove
         try {
             // метод репозитория сохранения
@@ -66,7 +64,6 @@ public class MessageHandlerImpl implements MessageHandler {
     //обрабатываем старт
     @Nullable
     public SendMessage messageProcessing(Message message) {
-
         long chatId = message.chat().id();
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
 
@@ -94,11 +91,9 @@ public class MessageHandlerImpl implements MessageHandler {
         }
     }
 
-
     @Override
     public SendMessage reportProcessing(Message message) {
         long chatId = message.chat().id();
-
         Optional<ShelterBuddy> shelterBuddy = service.getShelterBuddy(chatId);
 
         if (shelterBuddy.isPresent()) {
@@ -121,7 +116,6 @@ public class MessageHandlerImpl implements MessageHandler {
                     3 Изменение в поведении: отказ от старых привычек, приобретение новых.""");
         }
 
-
         if (shelterBuddy.isPresent()) {
             Optional<ShelterClients> user = shelterClientsDao.findByChatIdAndTookAnimalAndShelterBuddy((int) chatId, true, shelterBuddy.get());
             if (user.isPresent()) {
@@ -137,7 +131,6 @@ public class MessageHandlerImpl implements MessageHandler {
         }
         return new SendMessage(chatId, "Не удалось записать отчет!");
     }
-
 
     private Boolean checkVolunteer(Message message) {
         boolean checkVolunteer = false;

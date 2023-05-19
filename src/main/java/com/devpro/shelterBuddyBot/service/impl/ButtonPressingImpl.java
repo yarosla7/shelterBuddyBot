@@ -50,6 +50,7 @@ public class ButtonPressingImpl implements ButtonPressing {
     private final AnimalDao animalDao;
     private final VolunteerDao volunteerDao;
 
+
     @Transactional
     @Override
     public SendMessage handleCallback(CallbackQuery callbackQuery) {
@@ -80,34 +81,40 @@ public class ButtonPressingImpl implements ButtonPressing {
                 } else {
                     return new SendMessage(chatId, "\uD83D\uDC08\u200D⬛Выбран приют для кошек, чем я могу тебе помочь?").replyMarkup(inlineKeyboard);
                 }
+
             case SHELTER_INFO:
                 service.showButtonsForShelterInfo(inlineKeyboard);
                 return new SendMessage(chatId, "Что именно тебя интересует?").replyMarkup(inlineKeyboard);
+
             case GET_SHELTER_INFO:
                 shelterBuddy = service.getShelterBuddy(chatId);
                 if (shelterBuddy.isPresent()) {
                     return new SendMessage(chatId, shelterBuddy.get().getShelterInfo());
                 }
+
             case PHONE_SECURITY:
                 shelterBuddy = service.getShelterBuddy(chatId);
                 if (shelterBuddy.isPresent()) {
                     return new SendMessage(chatId, "Номер телефона охраны: " + shelterBuddy.get().getSecurityPhone());
                 }
+
             case SAFETY_PRECAUTIONS:
                 shelterBuddy = service.getShelterBuddy(chatId);
                 if (shelterBuddy.isPresent()) {
                     return new SendMessage(chatId, shelterBuddy.get().getSafetyRecommendations());
                 }
+
             case SHELTER_CONTACTS:
                 shelterBuddy = service.getShelterBuddy(chatId);
                 if (shelterBuddy.isPresent()) {
                     return new SendMessage(chatId, shelterBuddy.get().getContacts());
                 }
+
             case PUT_MY_PHONE:
                 Keyboard keyboard = new ReplyKeyboardMarkup(new KeyboardButton("Поделиться номером телефона").requestContact(true));
                 return new SendMessage(chatId, "Нажмите 'Поделиться номером телефона' что бы записать ваши контактные данные!").replyMarkup(keyboard);
-            case GET_ANIMAL:
 
+            case GET_ANIMAL:
                 if (choice.isPresent()) {
                     if (Objects.equals(choice.get().getShelterType(), CallbackRequest.DOGS.getCode())) {
                         service.showButtonsForHowTakeDog(inlineKeyboard);
@@ -117,6 +124,7 @@ public class ButtonPressingImpl implements ButtonPressing {
                     }
                     return new SendMessage(chatId, "Как взять кошку из приюта?").replyMarkup(inlineKeyboard);
                 }
+
             case REPORT_ANIMAL:
                 shelterBuddy = service.getShelterBuddy(chatId);
                 if (shelterBuddy.isPresent()) {
@@ -125,54 +133,71 @@ public class ButtonPressingImpl implements ButtonPressing {
                     if (user.isEmpty()) {
                         return new SendMessage(chatId, "❌У вас нет животного из этого приюта!");
                     } else {
-                        return new SendMessage(chatId, """                          
-                                Пришлите отчет в следующей форме !
-                                - Фото животного, далее пишите в описании фотографии:
-                                1 Рацион животного.
-                                2 Общее самочувствие и привыкание к новому месту.
-                                3 Изменение в поведении: отказ от старых привычек, приобретение новых.""");
+                        return new SendMessage(chatId, "Пришлите отчет в следующей форме !\n" +
+                                "- Фото животного, далее пишите в описании фотографии:\n" +
+                                "1 Рацион животного.\n" +
+                                "2 Общее самочувствие и привыкание к новому месту.\n" +
+                                "3 Изменение в поведении: отказ от старых привычек, приобретение новых." +
+                                "\n\nЛибо заполните отчет через форму в google" +
+                                "\nПерейдите пожалуйста по следующей ссылке" +
+                                "\nчто бы заполнить отчет: " +
+                                "\nОбязательно укажите ваш Id" +
+                                "\nВаш \uD83C\uDD94:' ➡️ " + user.get().getUserId() + " ⬅️'" +
+                                "\nhttps://forms.gle/B7a828wbv32avcoV6"
+                        );
                     }
                 }
+
             case INTRODUCTION_RULES:
                 if (animalAdvice.isPresent()) {
                     return new SendMessage(chatId, animalAdvice.get().getIntroductionRules());
                 }
+
             case NECESSARY_DOCUMENTS:
                 if (animalAdvice.isPresent()) {
                     return new SendMessage(chatId, animalAdvice.get().getNecessaryDocuments());
                 }
+
             case TRANSPORTATION_RECOMMENDATIONS:
                 if (animalAdvice.isPresent()) {
                     return new SendMessage(chatId, animalAdvice.get().getTransportationRecommendations());
                 }
+
             case PUPPY_HOME_ARRANGEMENT:
                 if (animalAdvice.isPresent()) {
                     return new SendMessage(chatId, animalAdvice.get().getPuppyHomeArrangement());
                 }
+
             case ADULT_HOME_ARRANGEMENT:
                 if (animalAdvice.isPresent()) {
                     return new SendMessage(chatId, animalAdvice.get().getAdultHomeArrangement());
                 }
+
             case HOME_ARRANGEMENT_WITH_LIMITED_ABILITY:
                 if (animalAdvice.isPresent()) {
                     return new SendMessage(chatId, animalAdvice.get().getHomeArrangementWithLimitedAbility());
                 }
+
             case INITIAL_COMMUNICATION_WITH_DOG_ADVICE:
                 if (animalAdvice.isPresent()) {
                     return new SendMessage(chatId, animalAdvice.get().getInitialCommunicationWithDogAdvice());
                 }
+
             case BEST_DOG_HANDLERS:
                 if (animalAdvice.isPresent()) {
                     return new SendMessage(chatId, animalAdvice.get().getBestDogHandlers());
                 }
+
             case REASONS_FOR_REFUSING_ANIMAL_TRANSFER:
                 if (animalAdvice.isPresent()) {
                     return new SendMessage(chatId, animalAdvice.get().getReasonsForRefusingAnimalTransfer());
                 }
+
             case KITTEN_HOME_ARRANGEMENT:
                 if (animalAdvice.isPresent()) {
                     return new SendMessage(chatId, animalAdvice.get().getKittenHomeArrangement());
                 }
+
             case STEP_BACK_INFO_SHELTER:
                 service.showButtonsForDogsCats(inlineKeyboard);
 
@@ -183,10 +208,12 @@ public class ButtonPressingImpl implements ButtonPressing {
                         return new SendMessage(chatId, "\uD83D\uDC08\u200D⬛Выбран приют для кошек, чем я могу тебе помочь?").replyMarkup(inlineKeyboard);
                     }
                 }
+
             case STEP_BACK_CHOOSING_SHELTER:
                 service.addButton(inlineKeyboard, CallbackRequest.CATS.getName(), CallbackRequest.CATS);
                 service.addButton(inlineKeyboard, CallbackRequest.DOGS.getName(), CallbackRequest.DOGS);
                 return new SendMessage(chatId, " Какой приют вы ищите?").replyMarkup(inlineKeyboard);
+
             case SHOW_REPORTS:
                 if (report.isPresent()) {
                     Optional<Animal> animalById = animalDao.findById(report.get().getAnimal().getAnimalId());
@@ -196,10 +223,13 @@ public class ButtonPressingImpl implements ButtonPressing {
                         String petName = animalById.get().getPetName();
                         String reportText = report.get().getReportText();
                         String photoLink = report.get().getTelegramPhotoLink();
-                        SendPhoto sendPhoto = new SendPhoto(chatId, photoLink);
+
                         telegramBot.execute(new SendMessage(chatId, "Отчет от усыновителя: " + report.get().getShelterClients().getName() +
-                                "\n" + animalType + " " + petName + " " + breed));
-                        telegramBot.execute(sendPhoto);
+                                "\n" + animalType + " " + petName + " " + breed +
+                                "\n\nCcылка на фото >" + "\n" + photoLink
+                        ));
+                        telegramBot.execute(new SendPhoto(chatId, photoLink));
+
                         service.addButton(inlineKeyboard, CallbackRequest.REPORT_OK.getName(), CallbackRequest.REPORT_OK);
                         service.addButton(inlineKeyboard, CallbackRequest.REPORT_NOT_OK.getName(), CallbackRequest.REPORT_NOT_OK);
                         return new SendMessage(chatId, reportText).replyMarkup(inlineKeyboard);
@@ -207,6 +237,7 @@ public class ButtonPressingImpl implements ButtonPressing {
                 } else {
                     return new SendMessage(chatId, "✅Отчетов больше нет").replyMarkup(inlineKeyboard);
                 }
+
             case REPORT_OK:
                 if (report.isPresent()) {
                     Optional<Reports> reports = reportsDao.findById(report.get().getId());
@@ -221,6 +252,7 @@ public class ButtonPressingImpl implements ButtonPressing {
                     }
                 }
                 return new SendMessage(chatId, "Произошла ошибка потверждения отчета, сообщите вашему программисту что тут проблема!").replyMarkup(inlineKeyboard);
+
             case REPORT_NOT_OK:
                 if (report.isPresent()) {
                     Optional<Reports> reports = reportsDao.findById(report.get().getId());
@@ -234,8 +266,9 @@ public class ButtonPressingImpl implements ButtonPressing {
                         return new SendMessage(chatId, "Колличество отчетов для просмотра: " + adminService.countReport()).replyMarkup(inlineKeyboard);
                     }
                 }
-                return new SendMessage(chatId, "Произошла ошибка отклонения отчета, сообщите вашему программисту что тут проблема!")
-                        .replyMarkup(inlineKeyboard);
+                return new SendMessage(chatId, "Произошла ошибка отклонения отчета, сообщите вашему программисту что тут проблема!").
+                        replyMarkup(inlineKeyboard);
+
             case SHOW_ANIMALS:
                 if (animal.isPresent()) {
                     Optional<ShelterClients> user = shelterClientsDao.findById(animal.get().getUserId());
@@ -262,6 +295,7 @@ public class ButtonPressingImpl implements ButtonPressing {
                 } else {
                     return new SendMessage(chatId, "✅Претендентов на усыновление больше нет").replyMarkup(inlineKeyboard);
                 }
+
             case ANIMAL_ADOPTED:
                 if (animal.isPresent()) {
                     Optional<ShelterClients> user = shelterClientsDao.findById(animal.get().getUserId());
@@ -280,8 +314,8 @@ public class ButtonPressingImpl implements ButtonPressing {
                     return new SendMessage(chatId, "Произошла ошибка, клиент не найдет в бд!")
                             .replyMarkup(inlineKeyboard);
                 }
-                return new SendMessage(chatId, "Произошла ошибка, животное не найдено в бд")
-                        .replyMarkup(inlineKeyboard);
+                return new SendMessage(chatId, "Произошла ошибка, животное не найдено в бд").replyMarkup(inlineKeyboard);
+
             case ANIMAL_NOT_ADOPTED:
                 if (animal.isPresent()) {
                     Optional<ShelterClients> user = shelterClientsDao.findById(animal.get().getUserId());
@@ -303,8 +337,8 @@ public class ButtonPressingImpl implements ButtonPressing {
                     return new SendMessage(chatId, "Произошла ошибка, клиент не найдет в бд!")
                             .replyMarkup(inlineKeyboard);
                 }
-                return new SendMessage(chatId, "Произошла ошибка, животное не найдено в бд")
-                        .replyMarkup(inlineKeyboard);
+                return new SendMessage(chatId, "Произошла ошибка, животное не найдено в бд").replyMarkup(inlineKeyboard);
+
             case ANIMAL_EXTEND_PERIOD_14:
                 if (animal.isPresent()) {
                     Optional<ShelterClients> user = shelterClientsDao.findById(animal.get().getUserId());
@@ -323,8 +357,7 @@ public class ButtonPressingImpl implements ButtonPressing {
                     return new SendMessage(chatId, "Произошла ошибка, клиент не найдет в бд!")
                             .replyMarkup(inlineKeyboard);
                 }
-                return new SendMessage(chatId, "Произошла ошибка, животное не найдено в бд")
-                        .replyMarkup(inlineKeyboard);
+                return new SendMessage(chatId, "Произошла ошибка, животное не найдено в бд").replyMarkup(inlineKeyboard);
 
             case ANIMAL_EXTEND_PERIOD_30:
                 if (animal.isPresent()) {
@@ -343,8 +376,8 @@ public class ButtonPressingImpl implements ButtonPressing {
                     return new SendMessage(chatId, "Произошла ошибка, клиент не найдет в бд!")
                             .replyMarkup(inlineKeyboard);
                 }
-                return new SendMessage(chatId, "Произошла ошибка, животное не найдено в бд")
-                        .replyMarkup(inlineKeyboard);
+                return new SendMessage(chatId, "Произошла ошибка, животное не найдено в бд").replyMarkup(inlineKeyboard);
+
             case HELP:
                 Keyboard keyboard1 = new ReplyKeyboardMarkup(new KeyboardButton("Поделиться номером телефона").requestContact(true));
                 if (service.checkClientChatIdInShelter(message)) {
@@ -374,8 +407,6 @@ public class ButtonPressingImpl implements ButtonPressing {
                 });
                 return new SendMessage(chatId, "\uD83D\uDCACС вами скоро свяжется волонтер!");
             default:
-
-
                 return new SendMessage(chatId, "Вызываю волонтера!");
         }
     }

@@ -10,6 +10,5 @@ import java.util.List;
 @Repository
 public interface AnimalDao extends JpaRepository<Animal, Integer> {
 
-
     List<Animal> findAllByAdoptedIsFalseAndAdoptDate(LocalDate adoptDate);
 }
