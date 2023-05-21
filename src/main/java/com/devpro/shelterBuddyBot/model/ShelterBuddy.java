@@ -1,6 +1,5 @@
 package com.devpro.shelterBuddyBot.model;
 
-import com.devpro.shelterBuddyBot.model.entity.ShelterClients;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

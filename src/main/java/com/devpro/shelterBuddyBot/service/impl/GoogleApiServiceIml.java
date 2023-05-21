@@ -1,10 +1,10 @@
 package com.devpro.shelterBuddyBot.service.impl;
 
+import com.devpro.shelterBuddyBot.model.Animal;
+import com.devpro.shelterBuddyBot.model.Reports;
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
-import com.devpro.shelterBuddyBot.model.entity.Animal;
-import com.devpro.shelterBuddyBot.model.entity.ClientDataReport;
-import com.devpro.shelterBuddyBot.model.entity.Reports;
-import com.devpro.shelterBuddyBot.model.entity.ShelterClients;
+import com.devpro.shelterBuddyBot.model.ShelterClients;
+import com.devpro.shelterBuddyBot.model.util.ClientDataReport;
 import com.devpro.shelterBuddyBot.repository.dao.ClientDataReportDao;
 import com.devpro.shelterBuddyBot.repository.dao.ReportsDao;
 import com.devpro.shelterBuddyBot.repository.dao.ShelterClientsDao;

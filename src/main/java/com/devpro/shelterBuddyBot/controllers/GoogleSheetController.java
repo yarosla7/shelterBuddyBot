@@ -1,7 +1,7 @@
-package com.devpro.shelterBuddyBot.controller;
+package com.devpro.shelterBuddyBot.controllers;
 
 
-import com.devpro.shelterBuddyBot.model.entity.ClientDataReport;
+import com.devpro.shelterBuddyBot.model.util.ClientDataReport;
 import com.devpro.shelterBuddyBot.service.impl.GoogleApiServiceIml;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

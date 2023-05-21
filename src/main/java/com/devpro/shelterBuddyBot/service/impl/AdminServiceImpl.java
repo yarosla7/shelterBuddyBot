@@ -1,9 +1,9 @@
 package com.devpro.shelterBuddyBot.service.impl;
 
-import com.devpro.shelterBuddyBot.model.entity.Animal;
-import com.devpro.shelterBuddyBot.model.entity.Reports;
-import com.devpro.shelterBuddyBot.model.entity.ShelterClients;
-import com.devpro.shelterBuddyBot.model.entity.Volunteer;
+import com.devpro.shelterBuddyBot.model.Animal;
+import com.devpro.shelterBuddyBot.model.Reports;
+import com.devpro.shelterBuddyBot.model.ShelterClients;
+import com.devpro.shelterBuddyBot.model.Volunteer;
 import com.devpro.shelterBuddyBot.repository.dao.AnimalDao;
 import com.devpro.shelterBuddyBot.repository.dao.ReportsDao;
 import com.devpro.shelterBuddyBot.repository.dao.ShelterClientsDao;
@@ -106,7 +106,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Scheduled(cron = "0 55 20 * * ?")
     @Transactional
-    protected void checkLastReports() {
+    public void checkLastReports() {
         List<Reports> lastReport = reportsDao.findLastReport();
         lastReport.forEach(report -> {
             LocalDate localDate = LocalDate.now().minusDays(2);
@@ -129,7 +129,7 @@ public class AdminServiceImpl implements AdminService {
                                 date + "\nСвяжитесь с ним, чтобы уточнить причину, номер телефона усыновителя: " + number));
                     });
                 });
-            } else if (localDate.compareTo(report.getDate()) >= 0) {
+            } else if (!localDate.isBefore(report.getDate())) {
                 reportsDao.findById(report.getId()).ifPresent(reports -> {
                     Integer chatId = reports.getShelterClients().getChatId();
                     String userName = service.getUserName(reports.getShelterClients().getName());

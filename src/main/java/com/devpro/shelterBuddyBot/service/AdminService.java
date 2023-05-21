@@ -1,7 +1,7 @@
 package com.devpro.shelterBuddyBot.service;
 
-import com.devpro.shelterBuddyBot.model.entity.Animal;
-import com.devpro.shelterBuddyBot.model.entity.Reports;
+import com.devpro.shelterBuddyBot.model.Animal;
+import com.devpro.shelterBuddyBot.model.Reports;
 import com.pengrad.telegrambot.model.Message;
 
 import java.util.List;

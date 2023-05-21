@@ -1,13 +1,9 @@
 package com.devpro.shelterBuddyBot.service.impl;
 
 import com.devpro.shelterBuddyBot.bot.listner.TelegramBotUpdatesListener;
-import com.devpro.shelterBuddyBot.model.AnimalAdvice;
-import com.devpro.shelterBuddyBot.model.Choice;
-import com.devpro.shelterBuddyBot.model.ShelterBuddy;
-import com.devpro.shelterBuddyBot.model.entity.Animal;
-import com.devpro.shelterBuddyBot.model.entity.Reports;
-import com.devpro.shelterBuddyBot.model.entity.ShelterClients;
-import com.devpro.shelterBuddyBot.model.entity.Volunteer;
+import com.devpro.shelterBuddyBot.model.*;
+import com.devpro.shelterBuddyBot.model.util.AnimalAdvice;
+import com.devpro.shelterBuddyBot.model.util.Choice;
 import com.devpro.shelterBuddyBot.repository.dao.*;
 import com.devpro.shelterBuddyBot.service.AdminService;
 import com.devpro.shelterBuddyBot.service.ButtonPressing;

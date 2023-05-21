@@ -1,7 +1,7 @@
 package com.devpro.shelterBuddyBot.repository.dao;
 
 import com.devpro.shelterBuddyBot.model.ShelterBuddy;
-import com.devpro.shelterBuddyBot.model.entity.ShelterClients;
+import com.devpro.shelterBuddyBot.model.ShelterClients;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

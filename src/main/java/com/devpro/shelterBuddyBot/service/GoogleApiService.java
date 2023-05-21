@@ -1,6 +1,6 @@
 package com.devpro.shelterBuddyBot.service;
 
-import com.devpro.shelterBuddyBot.model.entity.ClientDataReport;
+import com.devpro.shelterBuddyBot.model.util.ClientDataReport;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;

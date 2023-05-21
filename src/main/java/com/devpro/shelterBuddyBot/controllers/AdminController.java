@@ -1,6 +1,6 @@
-package com.devpro.shelterBuddyBot.controller;
+package com.devpro.shelterBuddyBot.controllers;
 
-import com.devpro.shelterBuddyBot.model.entity.Reports;
+import com.devpro.shelterBuddyBot.model.Reports;
 import com.devpro.shelterBuddyBot.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
