@@ -32,6 +32,7 @@ public class MessageHandlerImpl implements MessageHandler {
     private final VolunteerDao volunteerDao;
     private final AdminService adminService;
 
+
     @Nullable
     public SendMessage contactProcessing(Message message) {
         long chatId = message.chat().id();
