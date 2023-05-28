@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +36,7 @@ public class UserServiceTest {
 
     private Boolean tookAnimal = false;
 
-    private Integer chatId =1;
+    private Integer chatId = 1;
     private ShelterClients user;
     private static List<ShelterClients> USERS = List.of(new ShelterClients());
 
@@ -58,5 +59,17 @@ public class UserServiceTest {
         assertEquals(USERS, userServiceOut.findAll());
     }
 
+    @Test
+    @DisplayName("Удаление пользователя по его Id")
+    public void shouldDeleteUserById() {
+        Mockito.when(shelterClientsDaoMock.findById(chatId)).thenReturn(Optional.of(user));
+        assertEquals(Optional.of(user), userServiceOut.deleteById(chatId));
+    }
 
+//    @Test
+//    @DisplayName("Поиск и обновление пользователя по его Id")
+//    public void shouldFindAndUpdateCorrectUser() {
+//        Mockito.when(shelterClientsDaoMock.save(any())).thenReturn(user);
+//        assertEquals(user, userServiceOut.editUser(user));
+//    }
 }

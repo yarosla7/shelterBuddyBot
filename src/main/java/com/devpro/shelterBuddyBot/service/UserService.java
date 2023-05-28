@@ -30,15 +30,19 @@ public interface UserService {
      * Редактирует информацию о пользователе.
      *
      * @param shelterClient пользователь с новыми данными
+     * @return пользователь с заданным идентификатором Optional,
+     *  возвращает пустой Optional, если пользователь не найден
      */
-    void editUser(ShelterClients shelterClient);
+    ShelterClients editUser(ShelterClients shelterClient);
 
     /**
      * Удаляет пользователя по id.
      *
      * @param id идентификатор пользователя
+     * @return пользователя,
+     * возвращает ошибку NotFoundInBdException, если пользователь не найден
      */
-    void deleteById(Integer id);
+    Optional<ShelterClients> deleteById(Integer id);
 
     /**
      * Удаляет всех пользователей.
