@@ -29,17 +29,19 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public void addAnimal(Animal animal) {
-        animalDao.save(animal);
+    public Animal addAnimal(Animal animal) {
+        return animalDao.save(animal);
     }
 
     @Override
-    public void editAnimal(Animal animal) {
-        animalDao.save(animal);
+    public Animal editAnimal(Animal animal) {
+        return animalDao.save(animal);
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public Optional<Animal> deleteById(Integer id) {
+        Optional<Animal> temp = animalDao.findById(id);
         animalDao.deleteById(id);
+        return temp;
     }
 }

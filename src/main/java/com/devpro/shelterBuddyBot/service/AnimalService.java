@@ -31,21 +31,23 @@ public interface AnimalService {
      *
      * @param animal добавляемое животное.
      */
-    void addAnimal(Animal animal);
+    Animal addAnimal(Animal animal);
 
     /**
      * Изменяет данные о животном.
      *
      * @param animal измененные данные о животном.
+     * @return животное с заданным идентификатором.
      */
 
-    void editAnimal(Animal animal);
+    Animal editAnimal(Animal animal);
 
     /**
      * Удаляет животное по его идентификатору.
      *
      * @param id идентификатор животного, которое необходимо удалить.
+     * @return животное с заданным идентификатором.
      */
 
-    void deleteById(Integer id);
+    Optional<Animal> deleteById(Integer id);
 }

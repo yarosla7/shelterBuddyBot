@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 
+
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
@@ -66,10 +67,11 @@ public class UserServiceTest {
         assertEquals(Optional.of(user), userServiceOut.deleteById(chatId));
     }
 
-//    @Test
-//    @DisplayName("Поиск и обновление пользователя по его Id")
-//    public void shouldFindAndUpdateCorrectUser() {
-//        Mockito.when(shelterClientsDaoMock.save(any())).thenReturn(user);
-//        assertEquals(user, userServiceOut.editUser(user));
-//    }
+    @Test
+    @DisplayName("Поиск и обновление пользователя")
+    public void shouldFindAndUpdateCorrectUser() {
+        Mockito.when(shelterClientsDaoMock.save(any())).thenReturn(user);
+        assertEquals(user, userServiceOut.editUser(user));
+    }
 }
+

@@ -1,8 +1,0 @@
-package com.devpro.shelterBuddyBot.exception;
-
-public class NotFoundInBdException extends RuntimeException{
-    public NotFoundInBdException(String message) {
-
-        super(message);
-    }
-}
