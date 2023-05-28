@@ -1,12 +1,10 @@
 package com.devpro.shelterBuddyBot.controller;
 
 
-import com.devpro.shelterBuddyBot.ShelterBuddyBotApplication;
 import com.devpro.shelterBuddyBot.controllers.volunteersAPI.UsersController;
 import com.devpro.shelterBuddyBot.model.ShelterClients;
 import com.devpro.shelterBuddyBot.repository.dao.ShelterClientsDao;
 import com.devpro.shelterBuddyBot.service.impl.UserServiceImpl;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,13 +13,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +43,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Вывод списка всех животных")
+    @DisplayName("Вывод списка всех пользователей")
     void testFindAll() {
         when(userService.findAll()).thenReturn(shelterClientsList);
 
@@ -137,6 +132,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Удаление всех пользователей")
     void testDeleteAllUsers() {
         ResponseEntity<Void> response = usersController.deleteAllUsers();
 
