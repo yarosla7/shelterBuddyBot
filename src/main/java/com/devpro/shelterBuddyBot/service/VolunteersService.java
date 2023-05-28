@@ -28,13 +28,14 @@ public interface VolunteersService {
      *
      * @param volunteer добавляемый волонтер.
      */
-    void addVolunteer(Volunteer volunteer);
+    Volunteer addVolunteer(Volunteer volunteer);
 
     /**
      * Удаляет волонтера по его идентификатору.
      *
      * @param id идентификатор волонтера, которого необходимо удалить.
+     * @return волонтер с заданным идентификатором.
      */
 
-    void deleteById(Long id);
+    Optional<Volunteer> deleteById(Long id);
 }

@@ -1,5 +1,6 @@
 package com.devpro.shelterBuddyBot.service.impl;
 
+import com.devpro.shelterBuddyBot.model.ShelterClients;
 import com.devpro.shelterBuddyBot.model.Volunteer;
 import com.devpro.shelterBuddyBot.repository.dao.VolunteerDao;
 import com.devpro.shelterBuddyBot.service.VolunteersService;
@@ -30,12 +31,14 @@ public class VolunteersServiceImpl implements VolunteersService {
     }
 
     @Override
-    public void addVolunteer(Volunteer volunteer) {
-        volunteerDao.save(volunteer);
+    public Volunteer addVolunteer(Volunteer volunteer) {
+       return volunteerDao.save(volunteer);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public Optional<Volunteer> deleteById(Long id) {
+        Optional<Volunteer> temp = volunteerDao.findById(id);
         volunteerDao.deleteById(id);
+        return temp;
     }
 }
