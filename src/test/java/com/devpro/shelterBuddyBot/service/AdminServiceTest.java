@@ -13,6 +13,7 @@ import com.devpro.shelterBuddyBot.service.impl.AdminServiceImpl;
 import com.devpro.shelterBuddyBot.service.impl.ShelterServiceImpl;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.request.SendMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,5 +124,29 @@ public class AdminServiceTest {
         assertEquals("DOG", animal.getTypeOfAnimal());
         assertEquals("Buddy", animal.getPetName());
         assertEquals("Labrador", animal.getBreed());
+    }
+    @Test
+    @DisplayName("Проверка последних отчетов")
+    public void testCheckLastReports() {
+        LocalDate twoDaysAgo = LocalDate.now().minusDays(2);
+        ShelterClients shelterClient = new ShelterClients();
+        shelterClient.setName("Test User");
+        shelterClient.setChatId(123456);
+        Reports report = new Reports();
+        report.setId(1);
+        report.setDate(twoDaysAgo);
+        report.setShelterClients(shelterClient);
+
+
+        when(reportsDao.findLastReport()).thenReturn(Collections.singletonList(report));
+        when(reportsDao.findById(report.getId())).thenReturn(Optional.of(report));
+        when(shelterService.getUserName(shelterClient.getName())).thenReturn(shelterClient.getName());
+
+        adminService.checkLastReports();
+
+        verify(reportsDao).findLastReport();
+        verify(reportsDao).findById(report.getId());
+        verify(shelterService).getUserName(shelterClient.getName());
+        verify(telegramBot).execute(any(SendMessage.class));
     }
 }
