@@ -1,6 +1,7 @@
 package com.devpro.shelterBuddyBot.controllers.volunteersAPI;
 
 import com.devpro.shelterBuddyBot.model.Volunteer;
+import com.devpro.shelterBuddyBot.service.AdminService;
 import com.devpro.shelterBuddyBot.service.VolunteersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -26,9 +27,11 @@ import java.util.Optional;
                 """)
 public class VolunteersController {
     private final VolunteersService volunteersService;
+    private final AdminService adminService;
 
-    public VolunteersController(VolunteersService volunteersService) {
+    public VolunteersController(VolunteersService volunteersService, AdminService adminService) {
         this.volunteersService = volunteersService;
+        this.adminService = adminService;
     }
 
     @Operation(summary = "Получить список всех волонтеров",
@@ -113,5 +116,18 @@ public class VolunteersController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    @Operation(summary = "Присвоение животного усыновителю")
+    public ResponseEntity<String> adoptAnimal(@RequestParam Integer animalId,
+                                              @RequestParam Integer userId) {
+        try {
+            adminService.adoptAnimal(animalId, userId);
+            return ResponseEntity.ok("Животное присвоено усыновителю");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Произошла ошибка");
+        }
     }
 }
